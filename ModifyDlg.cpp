@@ -4,8 +4,10 @@
 #include "EnvVars.h"
 #include "RegOperate3.h"
 #include "resource.h"
+#include "EnvVarsDlg.h"
+#include "VariablesDlg.h"
 #include "ModifyDlg.h"
-#include "utils.h"
+
 
 DLG_DeclMap(ModifyDlg);
 
@@ -18,11 +20,14 @@ DLG_OnInitDialog(ModifyDlg)
 	CenterWindow( This->hDlg, GetParent(This->hDlg) );
 
 	String strTitle;
-	strTitle += This->bIsAdd ? "添加" : "修改";
-	strTitle += This->bIsUser ? "用户环境变量" : "系统环境变量";
+	strTitle += This->bIsAdd ? LoadStringRes(IDS_LANG_ADD) : LoadStringRes(IDS_LANG_MODIFY);
+	strTitle += This->bIsUser ? LoadStringRes(IDS_LANG_USERENVVARS) : LoadStringRes(IDS_LANG_SYSENVVARS);
 	SetWindowText( This->hDlg, strTitle.c_str() );
 
 	SetWindowText( GetDlgItem( This->hDlg, IDC_EDT_VAL ), This->strValue.c_str() );
+
+	EnvVarsDlg * pDlg = DLG_WndMap(EnvVarsDlg)[*__app.phMainWnd];
+	SendMessage( This->hDlg, WM_SETICON, ICON_SMALL, (LPARAM)pDlg->hIcon );
 }
 
 DLG_OnDestroy(ModifyDlg)
@@ -41,24 +46,36 @@ CLS_Method( void, ModifyDlg, OnOK )( ModifyDlg * This )
 	EndDialog( This->hDlg, IDOK );
 }
 
+CLS_Method( void, ModifyDlg, OnBtnVariable )( ModifyDlg * This )
+{
+	VariablesDlg * pDlg = CLS_Member( VariablesDlg, New )();
+	pDlg->bIsUser = This->bIsUser;
+
+	if ( IDOK == CLS_Member( VariablesDlg, DoModal )( pDlg, This->hDlg ) )
+	{
+
+	}
+
+	CLS_Member( VariablesDlg, Delete )(pDlg);
+}
+
 DLG_Proc(ModifyDlg)
 {
 	BEGIN_MSG()
 		ON_MSG(WM_INITDIALOG)
 			DLG_BindHWND(ModifyDlg);
 			CLS_Member( ModifyDlg, OnInitDialog )( GetPtr( ModifyDlg, lParam ) );
-		ON_MSG(WM_COMMAND)
-			BEGIN_CMD()
-				ON_ID(IDC_BTN_VARIABLE)
-					ModifyDlg * This = DLG_WndMap(ModifyDlg)[hDlg];
-					MessageBox( hDlg, "", "", 0 );
-				ON_ID(IDCANCEL)
-					EndDialog( hDlg, IDCANCEL );
-				ON_ID(IDOK)
-					CLS_Member( ModifyDlg, OnOK )( DLG_WndMap(ModifyDlg)[hDlg] );
-			END_CMD()
+		BEGIN_CMD()
+			ON_ID(IDC_BTN_VARIABLE)
+				ModifyDlg * This = DLG_This(ModifyDlg);
+				CLS_Member( ModifyDlg, OnBtnVariable )(This);
+			ON_ID(IDCANCEL)
+				EndDialog( hDlg, IDCANCEL );
+			ON_ID(IDOK)
+				CLS_Member( ModifyDlg, OnOK )( DLG_This(ModifyDlg) );
+		END_CMD()
 		ON_MSG(WM_DESTROY)
-			CLS_Member( ModifyDlg, OnDestroy )( DLG_WndMap(ModifyDlg)[hDlg] );
+			CLS_Member( ModifyDlg, OnDestroy )( DLG_This(ModifyDlg) );
 	END_MSG()
 	return 0;
 }

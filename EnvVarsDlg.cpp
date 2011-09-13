@@ -167,39 +167,36 @@ DLG_Proc(EnvVarsDlg)
 		ON_MSG(WM_INITDIALOG)
 			DLG_BindHWND(EnvVarsDlg);
 			CLS_Member( EnvVarsDlg, OnInitDialog )( GetPtr( EnvVarsDlg, lParam ) );
-		ON_MSG(WM_COMMAND)
-			BEGIN_CMD()
-				ON_ID(IDC_LIST_USER)
-					BEGIN_EVENT()
-						ON_EVENT(LBN_DBLCLK)
-							EnvVarsDlg * This = DLG_WndMap(EnvVarsDlg)[hDlg];
-							CLS_Member( EnvVarsDlg, OnModVal )( This, IDC_LIST_USER, true, This->userVars, This->strUserEnvKey, This->strVarName );
-					END_EVENT()
-				ON_ID(IDC_LIST_SYS)
-					BEGIN_EVENT()
-						ON_EVENT(LBN_DBLCLK)
-							EnvVarsDlg * This = DLG_WndMap(EnvVarsDlg)[hDlg];
-							CLS_Member( EnvVarsDlg, OnModVal )( This, IDC_LIST_SYS, false, This->sysVars, This->strSysEnvKey, This->strVarName );
-					END_EVENT()
-				ON_ID(IDCANCEL)
-					EndDialog( hDlg, IDCANCEL );
-				ON_ID(IDOK)
-					CLS_Member( EnvVarsDlg, OnOK )( DLG_WndMap(EnvVarsDlg)[hDlg] );
-				ON_ID(IDM_USR_ADD_VAL)
-					EnvVarsDlg * This = DLG_WndMap(EnvVarsDlg)[hDlg];
-					CLS_Member( EnvVarsDlg, OnAddVal )( This, IDC_LIST_USER, true, This->userVars, This->strUserEnvKey, This->strVarName );
-				ON_ID(IDM_USR_MOD_VAL)
-					EnvVarsDlg * This = DLG_WndMap(EnvVarsDlg)[hDlg];
+		BEGIN_CMD()
+			BEGIN_EVENT(IDC_LIST_USER)
+				ON_EVENT(LBN_DBLCLK)
+					EnvVarsDlg * This = DLG_This(EnvVarsDlg);
 					CLS_Member( EnvVarsDlg, OnModVal )( This, IDC_LIST_USER, true, This->userVars, This->strUserEnvKey, This->strVarName );
-				ON_ID(IDM_SYS_ADD_VAL)
-					EnvVarsDlg * This = DLG_WndMap(EnvVarsDlg)[hDlg];
-					CLS_Member( EnvVarsDlg, OnAddVal )( This, IDC_LIST_SYS, false, This->sysVars, This->strSysEnvKey, This->strVarName );
-				ON_ID(IDM_SYS_MOD_VAL)
-					EnvVarsDlg * This = DLG_WndMap(EnvVarsDlg)[hDlg];
+			END_EVENT()
+			BEGIN_EVENT(IDC_LIST_SYS)
+				ON_EVENT(LBN_DBLCLK)
+					EnvVarsDlg * This = DLG_This(EnvVarsDlg);
 					CLS_Member( EnvVarsDlg, OnModVal )( This, IDC_LIST_SYS, false, This->sysVars, This->strSysEnvKey, This->strVarName );
-			END_CMD()
+			END_EVENT()
+			ON_ID(IDCANCEL)
+				EndDialog( hDlg, IDCANCEL );
+			ON_ID(IDOK)
+				CLS_Member( EnvVarsDlg, OnOK )( DLG_This(EnvVarsDlg) );
+			ON_ID(IDM_USR_ADD_VAL)
+				EnvVarsDlg * This = DLG_This(EnvVarsDlg);
+				CLS_Member( EnvVarsDlg, OnAddVal )( This, IDC_LIST_USER, true, This->userVars, This->strUserEnvKey, This->strVarName );
+			ON_ID(IDM_USR_MOD_VAL)
+				EnvVarsDlg * This = DLG_This(EnvVarsDlg);
+				CLS_Member( EnvVarsDlg, OnModVal )( This, IDC_LIST_USER, true, This->userVars, This->strUserEnvKey, This->strVarName );
+			ON_ID(IDM_SYS_ADD_VAL)
+				EnvVarsDlg * This = DLG_This(EnvVarsDlg);
+				CLS_Member( EnvVarsDlg, OnAddVal )( This, IDC_LIST_SYS, false, This->sysVars, This->strSysEnvKey, This->strVarName );
+			ON_ID(IDM_SYS_MOD_VAL)
+				EnvVarsDlg * This = DLG_This(EnvVarsDlg);
+				CLS_Member( EnvVarsDlg, OnModVal )( This, IDC_LIST_SYS, false, This->sysVars, This->strSysEnvKey, This->strVarName );
+		END_CMD()
 		ON_MSG(WM_DESTROY)
-			CLS_Member( EnvVarsDlg, OnDestroy )( DLG_WndMap(EnvVarsDlg)[hDlg] );
+			CLS_Member( EnvVarsDlg, OnDestroy )( DLG_This(EnvVarsDlg) );
 	END_MSG()
 	return 0;
 }

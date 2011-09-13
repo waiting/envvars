@@ -21,9 +21,15 @@ struct App
 	StringArray CmdArguments;
 	HINSTANCE hInstance;
 	int nCmdShow;
+	HWND * phMainWnd;
+	String strExePath;
+	String strExeFile;
+	String strExeTitle;
+	String strExeExt;
 };
 extern App __app;
 
+void App_Init( void );
 /* 初始化命令参数 */
 void App_InitCmdArguments( void );
 
@@ -50,8 +56,11 @@ void App_InitCmdArguments( void );
 }
 
 /* Dialog */
+// wnd handle to data
 #define DLG_WndMap(DLG) __wndMap##DLG
 #define DLG_DeclMap(DLG) std::map< HWND,DLG * > DLG_WndMap(DLG)
+// get data in dlg_proc()
+#define DLG_This(DLG) ( DLG_WndMap(DLG)[hDlg] )
 // assoc wnd handle
 #define DLG_BindHWND(DLG) do { GetPtr( DLG, lParam )->hDlg = hDlg; DLG_WndMap(DLG)[hDlg] = GetPtr( DLG, lParam ); } while (0)
 // DoModal方法
@@ -86,10 +95,11 @@ case msg:\
 	{
 // switch command
 #define BEGIN_CMD()\
-switch ( LOWORD(wParam) )\
-{\
-case 0xFFFFFFFF:\
-	{
+ON_MSG(WM_COMMAND)\
+	switch ( LOWORD(wParam) )\
+	{\
+	case 0xFFFFFFFF:\
+		{
 
 #define END_CMD() \
 	}\
@@ -103,11 +113,12 @@ case id:\
 	{
 
 // cmd event code
-#define BEGIN_EVENT()\
-switch ( HIWORD(wParam) )\
-{\
-case 0xFFFFFFFF:\
-	{
+#define BEGIN_EVENT(ID)\
+ON_ID(ID)\
+	switch ( HIWORD(wParam) )\
+	{\
+	case 0xFFFFFFFF:\
+		{
 
 #define END_EVENT() \
 	}\
@@ -120,6 +131,36 @@ case 0xFFFFFFFF:\
 case evt:\
 	{
 
+// notify code
+#define BEGIN_NOTIFY()\
+ON_MSG(WM_NOTIFY)\
+	switch ( GetPtr(NMHDR,lParam)->idFrom )\
+	{\
+	case 0xFFFFFFFF:\
+		{
+
+#define END_NOTIFY() \
+	}\
+	break;\
+}
+
+#define BEGIN_CODE(ControlID)\
+ON_ID(ControlID)\
+	switch ( GetPtr(NMHDR,lParam)->code )\
+	{\
+	case 0xFFFFFFFF:\
+		{
+
+#define END_CODE() \
+	}\
+	break;\
+}
+
+#define ON_CODE(code)\
+	}\
+	break;\
+case code:\
+	{
 
 
 #endif // !defined(AFX_ENVVARS_H__3B7360BD_FC81_4867_8FF7_57CA936E3BCA__INCLUDED_)

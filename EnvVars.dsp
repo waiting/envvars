@@ -68,7 +68,8 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MD /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "NOT_EXIST_REGOPERATE_DLL" /FR /YX /FD /GZ /c
+# ADD CPP /nologo /MD /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "NOT_EXIST_REGOPERATE_DLL" /YX /FD /GZ /c
+# SUBTRACT CPP /Fr
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x804 /d "_DEBUG"
@@ -117,6 +118,10 @@ SOURCE=.\SubclassListBox.cpp
 
 SOURCE=.\utils.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\VariablesDlg.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -148,6 +153,10 @@ SOURCE=.\SubclassListBox.h
 # Begin Source File
 
 SOURCE=.\utils.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\VariablesDlg.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
