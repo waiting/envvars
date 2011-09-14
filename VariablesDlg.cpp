@@ -17,13 +17,13 @@ DLG_DoModal_Impl( VariablesDlg, IDD_VARIABLES )
 
 DLG_OnInitDialog(VariablesDlg)
 {
-	CenterWindow( This->hDlg, GetParent(This->hDlg) );
+	Window_Center( This->hDlg, GetParent(This->hDlg) );
 	// 图标
 	EnvVarsDlg * pDlg = DLG_WndMap(EnvVarsDlg)[*__app.phMainWnd];
 	SendMessage( This->hDlg, WM_SETICON, ICON_SMALL, (LPARAM)pDlg->hIcon );
 	// 标题
 	String strTitle= This->bIsUser ? LoadStringRes(IDS_LANG_USERENVVARS) : LoadStringRes(IDS_LANG_SYSENVVARS);
-	SetWindowText( This->hDlg, strTitle.c_str() );
+	Window_SetText( This->hDlg, strTitle );
 	// 初始化list view
 	HWND hListCtrl = GetDlgItem( This->hDlg, IDC_LISTVIEW_VARS );
 	SendMessage( hListCtrl, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, (LPARAM)LVS_EX_FULLROWSELECT );
@@ -68,6 +68,14 @@ DLG_OnDestroy(VariablesDlg)
 
 CLS_Method( void, VariablesDlg, OnOK )( VariablesDlg * This )
 {
+	HWND hListCtrl = GetDlgItem( This->hDlg, IDC_LISTVIEW_VARS );
+	int iItem = -1;
+	while ( ( iItem = ListView_GetNextItem( hListCtrl, iItem, LVIS_SELECTED ) ) != -1 )
+	{
+		TCHAR szVarName[256] = {0};
+		ListView_GetStrings( hListCtrl, iItem, 1, szVarName, 256 );
+		This->strVarSelected += String("%") + szVarName + "%";
+	}
 	EndDialog( This->hDlg, IDOK );
 }
 
@@ -83,13 +91,22 @@ CLS_Method( void, VariablesDlg, OnRunModify )( VariablesDlg * This )
 	}
 }
 
+CLS_Method( void, VariablesDlg, OnListViewVarsDbClk )( VariablesDlg * This, LPNMITEMACTIVATE lpnmitem )
+{
+	if ( lpnmitem->iItem == -1 )
+	{
+		return;
+	}
+	CLS_Member( VariablesDlg, OnOK )(This);
+}
+
 DLG_Proc(VariablesDlg)
 {
 	BEGIN_MSG()
 		BEGIN_NOTIFY()
 			BEGIN_CODE(IDC_LISTVIEW_VARS)
 				ON_CODE(NM_DBLCLK)
-					MessageBox( hDlg, "DBLCLK","",0 );
+					CLS_Member( VariablesDlg, OnListViewVarsDbClk )( DLG_This(VariablesDlg), GetPtr( NMITEMACTIVATE, lParam ) );
 			END_CODE()
 		END_NOTIFY()
 		ON_MSG(WM_INITDIALOG)

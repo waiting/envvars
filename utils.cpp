@@ -424,7 +424,7 @@ void GetLocalSysTimeByUTCMS( ULONGLONG ullMilliseconds, LPSYSTEMTIME lpSysTime )
 
 // UI相关 -----------------------------------------------------------------
 // 窗口相关
-void CenterWindow( HWND hWnd, HWND hRelativeWnd )
+void Window_Center( HWND hWnd, HWND hRelativeWnd )
 {
 	INT cx, cy, offsetLeft, offsetTop;
 	if ( hRelativeWnd && IsWindow(hRelativeWnd) )
@@ -452,6 +452,21 @@ void CenterWindow( HWND hWnd, HWND hRelativeWnd )
 	top = offsetTop + ( cy - nHeight ) / 2;
 	SetWindowPos( hWnd, NULL, left, top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOREDRAW );
 }
+
+String Window_GetText( HWND hWnd )
+{
+	String strRes;
+	int nLen = GetWindowTextLength(hWnd);
+	strRes.resize(nLen);
+	GetWindowText( hWnd, &strRes[0], nLen + 1 );
+	return strRes.c_str();
+}
+
+void Window_SetText( HWND hWnd, String const & str )
+{
+	SetWindowText( hWnd, str.c_str() );
+}
+
 
 // ListView操作
 void ListView_AddStrings( HWND hListView, int nArgCount, ... )

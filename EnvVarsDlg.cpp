@@ -28,9 +28,8 @@ CLS_Method( void, EnvVarsDlg, LoadEnvVars )( EnvVarsDlg * This )
 	{
 		This->strVarName = __app.CmdArguments[1];
 	}
-	strTitle.resize(512);
-	GetWindowText( This->hDlg, &strTitle[0], 512 );
-	SetWindowText( This->hDlg, ( This->strVarName + strTitle ).c_str() );
+	strTitle = Window_GetText(This->hDlg);
+	Window_SetText( This->hDlg, ( This->strVarName + strTitle ) );
 
 	HKEY hSysEnvKey = reg_open_key( This->strSysEnvKey.c_str(), FALSE );
 	dwSize = BUF_SIZE;
@@ -132,7 +131,7 @@ DLG_OnInitDialog(EnvVarsDlg)
 	SendMessage( This->hDlg, WM_SETICON, ICON_SMALL, (LPARAM)This->hIcon );
 
 	// 位置居中
-	CenterWindow( This->hDlg, HWND_DESKTOP );
+	Window_Center( This->hDlg, HWND_DESKTOP );
 
 	// 载入环境变量
 	CLS_Member( EnvVarsDlg, LoadEnvVars )(This);

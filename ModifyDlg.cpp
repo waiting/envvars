@@ -17,14 +17,14 @@ DLG_DoModal_Impl( ModifyDlg, IDD_MODIFY )
 
 DLG_OnInitDialog(ModifyDlg)
 {
-	CenterWindow( This->hDlg, GetParent(This->hDlg) );
+	Window_Center( This->hDlg, GetParent(This->hDlg) );
 
 	String strTitle;
 	strTitle += This->bIsAdd ? LoadStringRes(IDS_LANG_ADD) : LoadStringRes(IDS_LANG_MODIFY);
 	strTitle += This->bIsUser ? LoadStringRes(IDS_LANG_USERENVVARS) : LoadStringRes(IDS_LANG_SYSENVVARS);
-	SetWindowText( This->hDlg, strTitle.c_str() );
+	Window_SetText( This->hDlg, strTitle );
 
-	SetWindowText( GetDlgItem( This->hDlg, IDC_EDT_VAL ), This->strValue.c_str() );
+	Window_SetText( GetDlgItem( This->hDlg, IDC_EDT_VAL ), This->strValue );
 
 	EnvVarsDlg * pDlg = DLG_WndMap(EnvVarsDlg)[*__app.phMainWnd];
 	SendMessage( This->hDlg, WM_SETICON, ICON_SMALL, (LPARAM)pDlg->hIcon );
@@ -38,11 +38,7 @@ DLG_OnDestroy(ModifyDlg)
 CLS_Method( void, ModifyDlg, OnOK )( ModifyDlg * This )
 {
 	HWND hEdit = GetDlgItem( This->hDlg, IDC_EDT_VAL );
-	String strEdit;
-	int nLen = GetWindowTextLength(hEdit);
-	strEdit.resize(nLen);
-	GetWindowText( hEdit, &strEdit[0], nLen + 1 );
-	This->strValue = strEdit.c_str();
+	This->strValue = Window_GetText(hEdit);
 	EndDialog( This->hDlg, IDOK );
 }
 
@@ -53,7 +49,15 @@ CLS_Method( void, ModifyDlg, OnBtnVariable )( ModifyDlg * This )
 
 	if ( IDOK == CLS_Member( VariablesDlg, DoModal )( pDlg, This->hDlg ) )
 	{
-
+		HWND hEdit = GetDlgItem( This->hDlg, IDC_EDT_VAL );
+		LONG iStart, iEnd;
+		SendMessage( hEdit, EM_GETSEL, (WPARAM)&iStart, (LPARAM)&iEnd );
+		if ( pDlg->bSelected )
+		{
+			This->strValue = StrInsert( This->strValue.c_str(), iStart, iEnd, pDlg->strVarSelected.c_str() );
+			Window_SetText( hEdit, This->strValue );
+		}
+		//MessageBox( This->hDlg, pDlg->strVarSelected.c_str(), "Var Name", 0 );
 	}
 
 	CLS_Member( VariablesDlg, Delete )(pDlg);

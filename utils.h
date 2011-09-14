@@ -78,8 +78,13 @@ void GetUTCSysTimeByUTCMS( ULONGLONG ullMilliseconds, LPSYSTEMTIME lpSysTime );
 void GetLocalSysTimeByUTCMS( ULONGLONG ullMilliseconds, LPSYSTEMTIME lpSysTime );
 
 // UI相关 -----------------------------------------------------------------
+// 窗口相关
+
 /* 以相对窗口为准居中窗口 */
-void CenterWindow( HWND hWnd, HWND hRelativeWnd );
+void Window_Center( HWND hWnd, HWND hRelativeWnd );
+/* 窗口文本 */
+String Window_GetText( HWND hWnd );
+void Window_SetText( HWND hWnd, String const & str );
 
 // ListView操作
 void ListView_AddStrings( HWND hListView, int nArgCount, ... );
