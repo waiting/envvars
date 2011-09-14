@@ -1,10 +1,7 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
-// Used by EnvVars.rc
+// Used by EnvVars_*.rc
 //
-#define IDM_ABOUTBOX                    0x0010
-#define IDD_ABOUTBOX                    100
-#define IDS_ABOUTBOX                    101
 #define IDD_ENVVARS_DIALOG              102
 #define IDS_SYSENVKEY                   102
 #define IDS_USERENVKEY                  103
@@ -15,6 +12,8 @@
 #define IDS_LANG_MODIFY                 108
 #define IDS_LANG_SYSENVVARS             109
 #define IDS_LANG_USERENVVARS            110
+#define IDS_LANG_NAME                   111
+#define IDS_LANG_VALUE                  112
 #define IDR_MAINFRAME                   128
 #define IDD_MODIFY                      129
 #define IDD_VARIABLES                   130

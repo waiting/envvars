@@ -2,27 +2,29 @@
 #include <Windows.h>
 #include <string>
 #include <vector>
+#include <tchar.h>
+#include "utils.h"
 #include "RegOperate3.h"
 //--------定义全局数据-----------
 DWORD g_reg_type = REG_DWORD, g_size = sizeof(DWORD), g_reg_error = ERROR_NON;
-std::string g_result;
+String g_result;
 //-----------------------------------
 /*******************************************************************/
 /*reg_open_key获取键句柄*/
 REGOPERATE_IMPL_FUNC(HKEY) reg_open_key( LPCTSTR key_name, BOOL w /*= FALSE*/ )
 {
 	HKEY base_key_handle = NULL, key_handle = NULL;
-	LPCTSTR str = strchr( key_name, '\\' );
-	if ( !str ) str = key_name + strlen(key_name);	//只是根键的情况.
-	if ( !strnicmp( key_name, "HKEY_CLASSES_ROOT", str - key_name ) || !strnicmp( key_name, "HKCR", str - key_name ) )
+	LPCTSTR str = _tcschr( key_name, TEXT('\\') );
+	if ( !str ) str = key_name + _tcslen(key_name);	//只是根键的情况.
+	if ( !_tcsnicmp( key_name, TEXT("HKEY_CLASSES_ROOT"), str - key_name ) || !_tcsnicmp( key_name, TEXT("HKCR"), str - key_name ) )
 		base_key_handle = HKEY_CLASSES_ROOT;
-	else if ( !strnicmp( key_name, "HKEY_CURRENT_CONFIG", str - key_name ) || !strnicmp( key_name, "HKCC", str - key_name ) )
+	else if ( !_tcsnicmp( key_name, TEXT("HKEY_CURRENT_CONFIG"), str - key_name ) || !_tcsnicmp( key_name, TEXT("HKCC"), str - key_name ) )
 		base_key_handle = HKEY_CURRENT_CONFIG;
-	else if ( !strnicmp( key_name, "HKEY_CURRENT_USER", str - key_name ) || !strnicmp( key_name, "HKCU", str - key_name ) )
+	else if ( !_tcsnicmp( key_name, TEXT("HKEY_CURRENT_USER"), str - key_name ) || !_tcsnicmp( key_name, TEXT("HKCU"), str - key_name ) )
 		base_key_handle = HKEY_CURRENT_USER;
-	else if ( !strnicmp( key_name, "HKEY_LOCAL_MACHINE", str - key_name ) || !strnicmp( key_name, "HKLM", str - key_name ) )
+	else if ( !_tcsnicmp( key_name, TEXT("HKEY_LOCAL_MACHINE"), str - key_name ) || !_tcsnicmp( key_name, TEXT("HKLM"), str - key_name ) )
 		base_key_handle = HKEY_LOCAL_MACHINE;
-	else if ( !strnicmp( key_name, "HKEY_USERS", str - key_name ) || !strnicmp( key_name, "HKU", str - key_name ) )
+	else if ( !_tcsnicmp( key_name, TEXT("HKEY_USERS"), str - key_name ) || !_tcsnicmp( key_name, TEXT("HKU"), str - key_name ) )
 		base_key_handle = HKEY_USERS;
 	else
 	{
@@ -64,7 +66,7 @@ REGOPERATE_IMPL_FUNC(int) reg_close_key( HKEY key_handle )
 	switch(RegType) {
 	case REG_SZ:
 	case REG_EXPAND_SZ:
-		return strlen((LPCTSTR)buffer)+1;
+		return _tcslen((LPCTSTR)buffer)+1;
 //	case REG_BINARY:
 	case REG_DWORD:
 //	case REG_DWORD_LITTLE_ENDIAN:
@@ -72,7 +74,7 @@ REGOPERATE_IMPL_FUNC(int) reg_close_key( HKEY key_handle )
 		return 4;
 //	case REG_LINK:
 	case REG_MULTI_SZ:
-		return strlen((LPCTSTR)buffer)+2;
+		return _tcslen((LPCTSTR)buffer)+2;
 //	case REG_RESOURCE_LIST:
 //	case REG_FULL_RESOURCE_DESCRIPTOR:
 //	case REG_RESOURCE_REQUIREMENTS_LIST:
@@ -101,7 +103,7 @@ REGOPERATE_IMPL_FUNC(int) reg_write_ex( HKEY key_handle, LPCTSTR value_name, DWO
 
 REGOPERATE_IMPL_FUNC(int) reg_write_string( HKEY key_handle, LPCTSTR value_name, LPCTSTR str )
 {
-	return reg_write_ex( key_handle, value_name, REG_SZ,(LPBYTE const)str, strlen(str) + 1 );
+	return reg_write_ex( key_handle, value_name, REG_SZ,(LPBYTE const)str, _tcslen(str) + 1 );
 }
 
 REGOPERATE_IMPL_FUNC(int) reg_write_long( HKEY key_handle, LPCTSTR value_name, DWORD value )
@@ -154,12 +156,12 @@ REGOPERATE_IMPL_FUNC(int) reg_delete( LPCTSTR key_name, LPCTSTR value_name /*= N
 	}
 	else //值名为空,则删除键
 	{
-		const char * p = strrchr( key_name, '\\' );
+		TCHAR * p = _tcsrchr( key_name, '\\' );
 		if ( p && *( p + 1 ) )	//不是根键
 		{
-			char parent_key[512] = "";
-			char const * sub_key;
-			strncpy( parent_key, key_name, p - key_name );
+			TCHAR parent_key[512] = {0};
+			TCHAR const * sub_key;
+			_tcsncpy( parent_key, key_name, p - key_name );
 			p++; // skip '\\'
 			sub_key = p;
 			/*-----------以下是删除键----------*/
@@ -178,7 +180,7 @@ REGOPERATE_IMPL_FUNC(int) reg_delete( LPCTSTR key_name, LPCTSTR value_name /*= N
 
 REGOPERATE_IMPL_FUNC(int) reg_force_delete( LPCTSTR key_name )
 {
-	std::string key_buff;
+	String key_buff;
 	key_buff.resize(256);
 	bool exist_subkey = false;
 	HKEY key_handle = reg_open_key(key_name);
@@ -186,7 +188,7 @@ REGOPERATE_IMPL_FUNC(int) reg_force_delete( LPCTSTR key_name )
 	int i = 0;
 	for( ; !RegEnumKey( key_handle, i, &key_buff[0], key_buff.size() ); i++ )
 	{
-		reg_force_delete( std::string( std::string(key_name) + "\\" + key_buff ).c_str() );
+		reg_force_delete( String( String(key_name) + TEXT("\\") + key_buff ).c_str() );
 	}
 	reg_close_key(key_handle);
 	reg_delete(key_name);
@@ -199,14 +201,14 @@ REGOPERATE_IMPL_FUNC(BOOL) reg_error_info( int error_code, LPTSTR info_buff, int
 	memset( info_buff, 0, size );
 	if ( error_code == ERROR_NON )
 	{
-		strcat( info_buff, "没有错误!\n" );
+		_tcscat( info_buff, TEXT("没有错误!\n") );
 		return TRUE;
 	}
-	if ( error_code & ERROR_KEYNAME ) strcat( info_buff, "键名错误!\n" );
-	if ( error_code & ERROR_VALUENAME ) strcat( info_buff, "值名错误!\n" );
-	if ( error_code & ERROR_REGTYPE ) strcat( info_buff, "类型错误!\n" );
-	if ( error_code & ERROR_BUFFER ) strcat( info_buff, "缓冲区错误!\n" );
-	if ( error_code & ERROR_OTHER ) strcat( info_buff, "其他错误!\n" );
+	if ( error_code & ERROR_KEYNAME ) _tcscat( info_buff, TEXT("键名错误!\n") );
+	if ( error_code & ERROR_VALUENAME ) _tcscat( info_buff, TEXT("值名错误!\n") );
+	if ( error_code & ERROR_REGTYPE ) _tcscat( info_buff, TEXT("类型错误!\n") );
+	if ( error_code & ERROR_BUFFER ) _tcscat( info_buff, TEXT("缓冲区错误!\n") );
+	if ( error_code & ERROR_OTHER ) _tcscat( info_buff, TEXT("其他错误!\n") );
 	return TRUE;
 }
 
@@ -278,7 +280,7 @@ REGOPERATE_IMPL_FUNC(int) reg_enum_value( HKEY key_handle, REG_VALUE_ARRAY * val
 	{
 		REG_VALUE rv;
 		rv.value_name = new TCHAR[value_name_size + 1];
-		strncpy( rv.value_name, value_name, value_name_size );
+		_tcsncpy( rv.value_name, value_name, value_name_size );
 		rv.value_name[value_name_size] = 0;
 		rv.reg_type = reg_type;
 		rv.data_size = data_size;

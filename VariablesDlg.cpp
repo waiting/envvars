@@ -25,17 +25,20 @@ DLG_OnInitDialog(VariablesDlg)
 	String strTitle= This->bIsUser ? LoadStringRes(IDS_LANG_USERENVVARS) : LoadStringRes(IDS_LANG_SYSENVVARS);
 	Window_SetText( This->hDlg, strTitle );
 	// 初始化list view
+	String strName, strValue;
+	strName = LoadStringRes(IDS_LANG_NAME);
+	strValue = LoadStringRes(IDS_LANG_VALUE);
 	HWND hListCtrl = GetDlgItem( This->hDlg, IDC_LISTVIEW_VARS );
 	SendMessage( hListCtrl, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, (LPARAM)LVS_EX_FULLROWSELECT );
 	int nFirstColWidth = 85;
 	LVCOLUMN column;
 	column.mask = LVCF_TEXT | LVCF_FMT;
-	column.pszText = (LPTSTR)"名称";
+	column.pszText = &strName[0];
 	column.fmt = LVCFMT_LEFT;
 	column.mask |= LVCF_WIDTH;
 	column.cx = nFirstColWidth;
 	SendMessage( hListCtrl, LVM_INSERTCOLUMN, 0, (LPARAM)&column );
-	column.pszText = (LPTSTR)"值";
+	column.pszText = &strValue[0];
 	RECT rcListCtrl;
 	GetClientRect( hListCtrl, &rcListCtrl );
 	int nListCtrlWidth = rcListCtrl.right - rcListCtrl.left;
@@ -74,7 +77,8 @@ CLS_Method( void, VariablesDlg, OnOK )( VariablesDlg * This )
 	{
 		TCHAR szVarName[256] = {0};
 		ListView_GetStrings( hListCtrl, iItem, 1, szVarName, 256 );
-		This->strVarSelected += String("%") + szVarName + "%";
+		This->strVarSelected += String( TEXT("%") ) + szVarName + TEXT("%");
+		This->bSelected = true;
 	}
 	EndDialog( This->hDlg, IDOK );
 }
@@ -87,7 +91,7 @@ CLS_Method( void, VariablesDlg, OnRunModify )( VariablesDlg * This )
 	{
 		TCHAR szVarName[256] = {0};
 		ListView_GetStrings( hListCtrl, iItem, 1, szVarName, 256 );
-		WinExec( ( __app.strExeTitle + TEXT(" ") + szVarName ).c_str() , SW_NORMAL );
+		WinExec( StringToLocal( __app.strExeTitle + TEXT(" ") + szVarName ).c_str() , SW_NORMAL );
 	}
 }
 

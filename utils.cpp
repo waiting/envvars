@@ -549,13 +549,13 @@ void ListView_GetStrings( HWND hListView, int iItemIndex, int nArgPairCount, ...
 }
 
 // 图形图像相关 -----------------------------------------------------------
-BOOL SaveBitmapToFile( HBITMAP hBitmap, LPSTR lpszFileName )
+BOOL SaveBitmapToFile( HBITMAP hBitmap, LPCTSTR lpszFileName )
 {
 	HDC hDC;//设备描述表
 	int iBits;  //当前显示分辨率下每个像素所占字节数
 	WORD wBitCount = 0;    //位图中每个像素所占字节数
 	//定义调色板大小，位图中像素字节大小，位图文件大小，写入文件字节数
-	DWORD dwPaletteSize=0, dwBmBitsSize, dwDIBSize, dwWritten;
+	DWORD dwPaletteSize = 0, dwBmBitsSize, dwDIBSize, dwWritten;
 	BITMAP Bitmap; //位图属性结构
 	BITMAPFILEHEADER bmfHdr; //位图文件头结构
 	BITMAPINFOHEADER bi;//位图信息头结构
@@ -563,7 +563,7 @@ BOOL SaveBitmapToFile( HBITMAP hBitmap, LPSTR lpszFileName )
 	HANDLE fh, hDib;
 	HPALETTE hPal, hOldPal = NULL; //定义文件，分配内存句柄，调色板句柄
 	//计算位图文件每个像素所占字节数
-	hDC = CreateDC( "DISPLAY", NULL, NULL, NULL );
+	hDC = CreateDC( TEXT("DISPLAY"), NULL, NULL, NULL );
 	iBits = GetDeviceCaps(hDC, BITSPIXEL) * GetDeviceCaps(hDC, PLANES);
 	DeleteDC(hDC);
 	if (iBits <= 1)

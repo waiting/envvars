@@ -73,28 +73,17 @@ IDR_MAINFRAME           ICON    DISCARDABLE     "res\\EnvVars.ico"
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 55
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "关于 EnvVars"
-FONT 9, "宋体"
-BEGIN
-    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
-    LTEXT           "EnvVars 1.0 版",IDC_STATIC,40,10,119,8,SS_NOPREFIX
-    LTEXT           "WaiTing 版权所有 (C) 2011",IDC_STATIC,40,25,119,8
-    DEFPUSHBUTTON   "确定",IDOK,178,7,50,14,WS_GROUP
-END
-
 IDD_ENVVARS_DIALOG DIALOGEX 0, 0, 320, 214
 STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
     WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION " - 环境变量设置"
-FONT 9, "宋体", 0, 0, 0x1
+CAPTION " - Envionment Variables Settings"
+FONT 9, "Tahoma", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "用户",IDC_STATIC,5,5,310,90
+    GROUPBOX        "User",IDC_STATIC,5,5,310,90
     LISTBOX         IDC_LIST_USER,10,15,300,75,LBS_NOINTEGRALHEIGHT | 
                     WS_VSCROLL | WS_TABSTOP
-    GROUPBOX        "系统",IDC_STATIC,5,100,310,90
+    GROUPBOX        "System",IDC_STATIC,5,100,310,90
     LISTBOX         IDC_LIST_SYS,10,110,300,75,LBS_NOINTEGRALHEIGHT | 
                     WS_VSCROLL | WS_TABSTOP
     DEFPUSHBUTTON   "&OK",IDOK,104,195,50,14
@@ -103,20 +92,20 @@ END
 
 IDD_MODIFY DIALOG DISCARDABLE  0, 0, 183, 97
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "修改"
-FONT 9, "宋体"
+CAPTION "Modify"
+FONT 9, "Tahoma"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,35,75,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,100,75,50,14
-    LTEXT           "值",IDC_STATIC,10,10,16,8
+    DEFPUSHBUTTON   "&OK",IDOK,35,75,50,14
+    PUSHBUTTON      "&Cancel",IDCANCEL,100,75,50,14
+    LTEXT           "Value",IDC_STATIC,10,10,25,8
     EDITTEXT        IDC_EDT_VAL,10,25,165,14,ES_AUTOHSCROLL
     PUSHBUTTON      "&Variables...",IDC_BTN_VARIABLE,115,45,60,14
 END
 
 IDD_VARIABLES DIALOG DISCARDABLE  0, 0, 297, 234
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "变量一览"
-FONT 9, "宋体"
+CAPTION "Variables View"
+FONT 9, "Tahoma"
 BEGIN
     DEFPUSHBUTTON   "&OK",IDOK,40,210,65,14
     PUSHBUTTON      "&Cancel",IDCANCEL,116,210,65,14
@@ -151,14 +140,14 @@ BEGIN
         BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "WaiTing\0"
-            VALUE "FileDescription", "EnvVars 环境变量设置 v1.0\0"
+            VALUE "FileDescription", "EnvVars Environment Variables Settings v1.0\0"
             VALUE "FileVersion", "1, 0, 0, 1\0"
             VALUE "InternalName", "EnvVars\0"
-            VALUE "LegalCopyright", "版权所有 (C) 2011\0"
+            VALUE "LegalCopyright", "All rights reserved. (C) 2011\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "EnvVars.exe\0"
             VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "EnvVars 环境变量设置\0"
+            VALUE "ProductName", "EnvVars Environment Variables Settings\0"
             VALUE "ProductVersion", "1, 0, 0, 1\0"
             VALUE "SpecialBuild", "\0"
         END
@@ -180,14 +169,6 @@ END
 #ifdef APSTUDIO_INVOKED
 GUIDELINES DESIGNINFO DISCARDABLE 
 BEGIN
-    IDD_ABOUTBOX, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 228
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 48
-    END
-
     IDD_ENVVARS_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -263,16 +244,21 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_ABOUTBOX            "关于 EnvVars(&A)..."
     IDS_SYSENVKEY           "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment"
     IDS_USERENVKEY          "HKEY_CURRENT_USER\\Environment"
     IDS_VARNAME             "PATH"
-    IDS_ADDMENU             "添加""值""(&A)..."
-    IDS_MODMENU             "修改""值""(&M)..."
-    IDS_LANG_ADD            "添加"
-    IDS_LANG_MODIFY         "修改"
-    IDS_LANG_SYSENVVARS     "系统环境变量"
-    IDS_LANG_USERENVVARS    "用户环境变量"
+    IDS_ADDMENU             "Add""Value""(&A)..."
+    IDS_MODMENU             "Modify""Value""(&M)..."
+    IDS_LANG_ADD            "Add "
+    IDS_LANG_MODIFY         "Modify "
+    IDS_LANG_SYSENVVARS     "System Environment Variables"
+    IDS_LANG_USERENVVARS    "User Environment Variables"
+    IDS_LANG_NAME           "Name"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_LANG_VALUE          "Value"
 END
 
 #endif    // Chinese (P.R.C.) resources
@@ -295,8 +281,7 @@ END
 LANGUAGE 4, 2
 #pragma code_page(936)
 #endif //_WIN32
-#include "res\EnvVars.rc2"  // non-Microsoft Visual C++ edited resources
-#include "l.chs\afxres.rc"          // Standard components
+
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

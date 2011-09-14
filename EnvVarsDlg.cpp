@@ -36,7 +36,7 @@ CLS_Method( void, EnvVarsDlg, LoadEnvVars )( EnvVarsDlg * This )
 	ZeroMemory( sz, dwSize );
 	reg_read_ex( hSysEnvKey, This->strVarName.c_str(), (LPBYTE)sz, &This->dwRegTypeSysVar, &dwSize );
 	This->sysVars.clear();
-	StrSplit( sz, ";", &This->sysVars );
+	StrSplit( sz, TEXT(";"), &This->sysVars );
 	reg_close_key(hSysEnvKey);
 	
 	HKEY hUserEnvKey = reg_open_key( This->strUserEnvKey.c_str(), FALSE );
@@ -44,7 +44,7 @@ CLS_Method( void, EnvVarsDlg, LoadEnvVars )( EnvVarsDlg * This )
 	ZeroMemory( sz, dwSize );
 	reg_read_ex( hUserEnvKey, This->strVarName.c_str(), (LPBYTE)sz, &This->dwRegTypeUserVar, &dwSize );
 	This->userVars.clear();
-	StrSplit( sz, ";", &This->userVars );
+	StrSplit( sz, TEXT(";"), &This->userVars );
 	reg_close_key(hUserEnvKey);
 }
 
@@ -91,7 +91,7 @@ CLS_Method( void, EnvVarsDlg, OnAddVal )( EnvVarsDlg * This, UINT uListBoxID, bo
 			CLS_Member( EnvVarsDlg, UpdateVarsList )( This, uListBoxID, arrVars );
 			HWND hListBox = GetDlgItem( This->hDlg, uListBoxID );
 			SendMessage( hListBox, LB_SETCURSEL, iSel, 0 );
-			CLS_Member( EnvVarsDlg, CommitEnvVars )( This, strEnvKey, strVarName, StrJoin( ";", arrVars ) );
+			CLS_Member( EnvVarsDlg, CommitEnvVars )( This, strEnvKey, strVarName, StrJoin( TEXT(";"), arrVars ) );
 			This->bHasModified = true;
 		}
 	}
@@ -115,7 +115,7 @@ CLS_Method( void, EnvVarsDlg, OnModVal )( EnvVarsDlg * This, UINT uListBoxID, bo
 		if ( bIsEmpty ) arrVars.erase( arrVars.begin() + iSel );
 		CLS_Member( EnvVarsDlg, UpdateVarsList )( This, uListBoxID, arrVars );
 		SendMessage( hListBox, LB_SETCURSEL, bIsEmpty ? iSel - 1 : iSel, 0 );
-		CLS_Member( EnvVarsDlg, CommitEnvVars )( This, strEnvKey, strVarName, StrJoin( ";", arrVars ) );
+		CLS_Member( EnvVarsDlg, CommitEnvVars )( This, strEnvKey, strVarName, StrJoin( TEXT(";"), arrVars ) );
 		This->bHasModified = true;
 	}
 	CLS_Member( ModifyDlg, Delete )(pModDlg);
@@ -154,7 +154,9 @@ CLS_Method( void, EnvVarsDlg, OnOK )( EnvVarsDlg * This )
 	if ( This->bHasModified )
 	{
 		LRESULT lResult;
-		lResult = ::SendMessage( HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM)"Environment" );
+		//DWORD dw;
+		lResult = SendMessage( HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM)TEXT("Environment") );
+		//lResult = SendMessageTimeout( HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM)TEXT("Environment"), SMTO_NORMAL, 3000, &dw );
 	}
 	EndDialog( This->hDlg, IDOK );
 }

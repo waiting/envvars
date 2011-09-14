@@ -46,6 +46,7 @@ CLS_Method( void, ModifyDlg, OnBtnVariable )( ModifyDlg * This )
 {
 	VariablesDlg * pDlg = CLS_Member( VariablesDlg, New )();
 	pDlg->bIsUser = This->bIsUser;
+	pDlg->bSelected = false;
 
 	if ( IDOK == CLS_Member( VariablesDlg, DoModal )( pDlg, This->hDlg ) )
 	{
@@ -54,10 +55,10 @@ CLS_Method( void, ModifyDlg, OnBtnVariable )( ModifyDlg * This )
 		SendMessage( hEdit, EM_GETSEL, (WPARAM)&iStart, (LPARAM)&iEnd );
 		if ( pDlg->bSelected )
 		{
+			This->strValue = Window_GetText(hEdit);
 			This->strValue = StrInsert( This->strValue.c_str(), iStart, iEnd, pDlg->strVarSelected.c_str() );
 			Window_SetText( hEdit, This->strValue );
 		}
-		//MessageBox( This->hDlg, pDlg->strVarSelected.c_str(), "Var Name", 0 );
 	}
 
 	CLS_Member( VariablesDlg, Delete )(pDlg);

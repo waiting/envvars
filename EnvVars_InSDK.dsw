@@ -3,7 +3,19 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
-Project: "EnvVars"=.\EnvVars.dsp - Package Owner=<4>
+Project: "EnvVars_CHS"=.\EnvVars_CHS.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "EnvVars_ENG"=.\EnvVars_ENG.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
