@@ -50,7 +50,6 @@ BEGIN
     "LANGUAGE 4, 2\r\n"
     "#pragma code_page(936)\r\n"
     "#endif //_WIN32\r\n"
-    "#include ""res\\EnvVars.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
     "#include ""l.chs\\afxres.rc""          // Standard components\r\n"
     "#endif\r\n"
     "\0"
@@ -97,7 +96,7 @@ FONT 9, "Tahoma"
 BEGIN
     DEFPUSHBUTTON   "&OK",IDOK,35,75,50,14
     PUSHBUTTON      "&Cancel",IDCANCEL,100,75,50,14
-    LTEXT           "Value",IDC_STATIC,10,10,25,8
+    LTEXT           "Value",IDC_STATIC,10,10,25,8,SS_NOTIFY
     EDITTEXT        IDC_EDT_VAL,10,25,165,14,ES_AUTOHSCROLL
     PUSHBUTTON      "&Variables...",IDC_BTN_VARIABLE,115,45,60,14
 END
@@ -281,7 +280,7 @@ END
 LANGUAGE 4, 2
 #pragma code_page(936)
 #endif //_WIN32
-
+#include "l.chs\afxres.rc"          // Standard components
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

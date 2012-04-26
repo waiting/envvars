@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
-// Used by EnvVars_*.rc
+// Used by EnvVars_ENG.rc
 //
 #define IDD_ENVVARS_DIALOG              102
 #define IDS_SYSENVKEY                   102

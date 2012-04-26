@@ -179,58 +179,6 @@ UnicodeString StringToUnicode( String const & str )
 #endif
 }
 
-String UTF8ToString( AnsiString const & strUTF8 )
-{
-	UnicodeString strUnicode;
-	int cch = MultiByteToWideChar(
-		CP_UTF8,
-		0,
-		strUTF8.c_str(),
-		strUTF8.length(),
-		NULL,
-		0
-	);
-	strUnicode.resize(cch);
-	MultiByteToWideChar(
-		CP_UTF8,
-		0,
-		strUTF8.c_str(),
-		strUTF8.length(),
-		&strUnicode[0],
-		cch
-	);
-	return UnicodeToString(strUnicode);
-}
-
-AnsiString StringToUTF8( String const & str )
-{
-	UnicodeString strUnicode = StringToUnicode(str);
-	AnsiString strUTF8;
-	int nLength = WideCharToMultiByte(
-		CP_UTF8,
-		0,
-		strUnicode.c_str(),
-		strUnicode.length(),
-		NULL,
-		0,
-		NULL,
-		NULL
-	);
-	strUTF8.resize(nLength);
-	WideCharToMultiByte(
-		CP_UTF8,
-		0,
-		strUnicode.c_str(),
-		strUnicode.length(),
-		&strUTF8[0],
-		nLength,
-		NULL,
-		NULL
-	);
-	return strUTF8;
-}
-
-
 int StrSplit( LPCTSTR lpsz, LPCTSTR lpszDelim, StringArray * pArr )
 {
 	TCHAR * pszDup;
@@ -274,28 +222,6 @@ String StrInsert( LPCTSTR lpsz, int iStart, int iEnd, LPCTSTR lpsz2 )
 	if ( iEnd < str.length() )
 		strRes += str.substr( iEnd );
 	return strRes;
-}
-
-String OutputExV( int cchMsg, LPCTSTR lpszFormat, va_list args )
-{
-	String str;
-	str.resize(cchMsg);
-	_vsntprintf( &str[0], cchMsg, lpszFormat, args );
-	return str;
-}
-
-String OutputEx( int cchMsg, LPCTSTR lpszFormat, ... )
-{
-	va_list args;
-	va_start( args, lpszFormat );
-	return OutputExV( cchMsg, lpszFormat, args );
-}
-
-String Output( LPCTSTR lpszFormat, ... )
-{
-	va_list args;
-	va_start( args, lpszFormat );
-	return OutputExV( 1024, lpszFormat, args );
 }
 
 // 资源相关 ---------------------------------------------------------------
@@ -344,82 +270,20 @@ String LoadStringRes( UINT uStringResID )
 	return LoadStringResEx( GetModuleHandle(NULL), uStringResID );
 }
 
-
 // 系统相关 ---------------------------------------------------------------
-
-bool ShutdownPrivilege( bool bEnable )
+int GetCommandArguments( StringArray * pArr )
 {
-	HANDLE hToken;
-	bool bRet = OpenProcessToken( GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES, &hToken ) != FALSE;
-	if ( !bRet ) return FALSE;
-	TOKEN_PRIVILEGES tp;
-	tp.PrivilegeCount = 1;
-	LookupPrivilegeValue( NULL, SE_SHUTDOWN_NAME, &tp.Privileges[0].Luid );
-	tp.Privileges[0].Attributes = bEnable ? SE_PRIVILEGE_ENABLED : 0;
-	AdjustTokenPrivileges( hToken, FALSE, &tp, 0, NULL, NULL );
-	bRet = ( GetLastError() == ERROR_SUCCESS );
-	CloseHandle(hToken);
-	return bRet;
-}
-
-
-// 1970-01-01 00:00:00的ULARGE_INTEGER描述
-static ULARGE_INTEGER __Time1970( void )
-{
-	SYSTEMTIME st1970 = {0};
-	st1970.wYear = 1970;
-	st1970.wMonth = 1;
-	st1970.wDay = 1;
-	st1970.wHour = 0;
-	st1970.wMinute = 0;
-	st1970.wSecond = 0;
-	
-	FILETIME ft1970;
-	ULARGE_INTEGER time1970;
-	SystemTimeToFileTime( &st1970, &ft1970 );
-	CopyMemory( &time1970, &ft1970, sizeof(time1970) );
-	return time1970;
-}
-
-ULONGLONG GetUTCTimeMS( void )
-{
-	SYSTEMTIME st;
-	FILETIME ft;
-	ULARGE_INTEGER time;
-	GetSystemTime(&st);
-	SystemTimeToFileTime( &st, &ft );
-	CopyMemory( &time, &ft, sizeof(time) );
-	
-	ULARGE_INTEGER timeRes;
-	timeRes.QuadPart = time.QuadPart - __Time1970().QuadPart;
-	
-	return timeRes.QuadPart / 10000;
-}
-
-UINT GetUTCTime( void )
-{
-	return (UINT)( GetUTCTimeMS() / 1000 );
-}
-
-void GetUTCSysTimeByUTCMS( ULONGLONG ullMilliseconds, LPSYSTEMTIME lpSysTime )
-{
-	ULONGLONG ullTime = ullMilliseconds * 10000;
-	ULARGE_INTEGER time;
-	time.QuadPart = ullTime + __Time1970().QuadPart;
-	FILETIME ft;
-	CopyMemory( &ft, &time, sizeof(ft) );
-	FileTimeToSystemTime( &ft, lpSysTime );
-}
-
-void GetLocalSysTimeByUTCMS( ULONGLONG ullMilliseconds, LPSYSTEMTIME lpSysTime )
-{
-	ULONGLONG ullTime = ullMilliseconds * 10000;
-	ULARGE_INTEGER time;
-	time.QuadPart = ullTime + __Time1970().QuadPart;
-	FILETIME ft,localft;
-	CopyMemory( &ft, &time, sizeof(ft) );
-	FileTimeToLocalFileTime( &ft, &localft );
-	FileTimeToSystemTime( &localft, lpSysTime );
+	pArr->clear();
+	// 命令行参数处理
+	LPWSTR lpszCmdLine = GetCommandLineW();
+	int nNumArgs, i;
+	LPWSTR * pArgsArr = CommandLineToArgvW( lpszCmdLine, &nNumArgs );
+	for ( i = 0; i < nNumArgs; ++i )
+	{
+		pArr->push_back( UnicodeToString( pArgsArr[i] ) );
+	}
+	GlobalFree( (HGLOBAL)pArgsArr );
+	return nNumArgs;
 }
 
 // UI相关 -----------------------------------------------------------------
@@ -548,92 +412,3 @@ void ListView_GetStrings( HWND hListView, int iItemIndex, int nArgPairCount, ...
 	va_end(vaArgList);
 }
 
-// 图形图像相关 -----------------------------------------------------------
-BOOL SaveBitmapToFile( HBITMAP hBitmap, LPCTSTR lpszFileName )
-{
-	HDC hDC;//设备描述表
-	int iBits;  //当前显示分辨率下每个像素所占字节数
-	WORD wBitCount = 0;    //位图中每个像素所占字节数
-	//定义调色板大小，位图中像素字节大小，位图文件大小，写入文件字节数
-	DWORD dwPaletteSize = 0, dwBmBitsSize, dwDIBSize, dwWritten;
-	BITMAP Bitmap; //位图属性结构
-	BITMAPFILEHEADER bmfHdr; //位图文件头结构
-	BITMAPINFOHEADER bi;//位图信息头结构
-	LPBITMAPINFOHEADER lpbi; //指向位图信息头结构
-	HANDLE fh, hDib;
-	HPALETTE hPal, hOldPal = NULL; //定义文件，分配内存句柄，调色板句柄
-	//计算位图文件每个像素所占字节数
-	hDC = CreateDC( TEXT("DISPLAY"), NULL, NULL, NULL );
-	iBits = GetDeviceCaps(hDC, BITSPIXEL) * GetDeviceCaps(hDC, PLANES);
-	DeleteDC(hDC);
-	if (iBits <= 1)
-		wBitCount = 1;
-	else if (iBits <= 4)
-		wBitCount = 4;
-	else if (iBits <= 8)
-		wBitCount = 8;
-	else if (iBits <= 24)
-		wBitCount = 24;
-	else
-		wBitCount = 32;
-	//计算调色板大小
-	if (wBitCount <= 8)
-		dwPaletteSize = (1 << wBitCount) * sizeof(RGBQUAD);
-	
-	//设置位图信息头结构
-	GetObject(hBitmap, sizeof(BITMAP), &Bitmap);
-	bi.biSize = sizeof(BITMAPINFOHEADER);
-	bi.biWidth = Bitmap.bmWidth;
-	bi.biHeight = Bitmap.bmHeight;
-	bi.biPlanes = 1;
-	bi.biBitCount = wBitCount;
-	bi.biCompression = BI_RGB;
-	bi.biSizeImage = 0;
-	bi.biXPelsPerMeter = 0;
-	bi.biYPelsPerMeter = 0;
-	bi.biClrUsed = 0;
-	bi.biClrImportant = 0;
-	
-	dwBmBitsSize = ( ( Bitmap.bmWidth * wBitCount + 31 ) / 32 ) * 4 * Bitmap.bmHeight;
-	//为位图内容分配内存
-	hDib = GlobalAlloc( GHND, dwBmBitsSize + dwPaletteSize + sizeof( BITMAPINFOHEADER ) );
-	lpbi = ( LPBITMAPINFOHEADER )GlobalLock( hDib );
-	*lpbi = bi;
-	//   处理调色板      
-	hPal = ( HPALETTE )GetStockObject(DEFAULT_PALETTE);
-	if ( hPal )
-	{
-		hDC = GetDC(NULL);
-		hOldPal = SelectPalette( hDC, hPal, FALSE );
-		RealizePalette(hDC);
-	}
-	//   获取该调色板下新的像素值
-	GetDIBits(hDC, hBitmap, 0,(UINT)Bitmap.bmHeight, (LPSTR)lpbi + sizeof(BITMAPINFOHEADER) + dwPaletteSize, ( LPBITMAPINFO )lpbi, DIB_RGB_COLORS);
-	//恢复调色板
-	if (hOldPal)
-	{
-		SelectPalette(hDC, hOldPal, TRUE);
-		RealizePalette(hDC);
-		ReleaseDC(NULL, hDC);
-	}
-	//创建位图文件        
-	fh = CreateFile(lpszFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
-	if (fh == INVALID_HANDLE_VALUE)
-		return FALSE;
-	//   设置位图文件头
-	bmfHdr.bfType = 0x4D42;     //   "BM"
-	dwDIBSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + dwPaletteSize + dwBmBitsSize;
-	bmfHdr.bfSize = dwDIBSize;
-	bmfHdr.bfReserved1 = 0;
-	bmfHdr.bfReserved2 = 0;
-	bmfHdr.bfOffBits = (DWORD)sizeof(BITMAPFILEHEADER) + (DWORD)sizeof(BITMAPINFOHEADER) + dwPaletteSize;
-	//   写入位图文件头
-	WriteFile(fh, &bmfHdr, sizeof(BITMAPFILEHEADER), &dwWritten, NULL);
-	//   写入位图文件其余内容
-	WriteFile(fh, lpbi, dwDIBSize, &dwWritten, NULL);
-	//清除
-	GlobalUnlock(hDib);
-	GlobalFree(hDib);
-	CloseHandle(fh);
-	return TRUE;
-}

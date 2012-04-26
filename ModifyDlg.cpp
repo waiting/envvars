@@ -81,6 +81,12 @@ DLG_Proc(ModifyDlg)
 		END_CMD()
 		ON_MSG(WM_DESTROY)
 			CLS_Member( ModifyDlg, OnDestroy )( DLG_This(ModifyDlg) );
+		ON_MSG(WM_CTLCOLORSTATIC)
+			HDC hDC = (HDC)wParam;
+			SetTextColor( hDC, 0xFF0000 );
+			SetBkMode( hDC, TRANSPARENT );
+			return (INT_PTR)GetStockObject(NULL_BRUSH);
+			//return SendMessage( (HWND)lParam, 你自己定义一个消息, wParam, lParam );
 	END_MSG()
 	return 0;
 }

@@ -25,7 +25,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 App __app;
 void App_Init( void )
 {
-	App_InitCmdArguments();
+	GetCommandArguments( &__app.CmdArguments );
 	// get path of executable
 	TCHAR szBuff[_MAX_PATH];
 	GetModuleFileName( __app.hInstance, szBuff, _MAX_PATH );
@@ -56,17 +56,4 @@ void App_Init( void )
 		__app.strExeTitle = pszFile;
 		__app.strExeExt = TEXT("");
 	}
-}
-
-void App_InitCmdArguments( void )
-{
-	// 命令行参数处理
-	LPWSTR lpszCmdLine = GetCommandLineW();
-	int nNumArgs;
-	LPWSTR * pArgsArr = CommandLineToArgvW( lpszCmdLine, &nNumArgs );
-	for ( int i = 0; i < nNumArgs; ++i )
-	{
-		__app.CmdArguments.push_back( UnicodeToString( pArgsArr[i] ) );
-	}
-	GlobalFree( (HGLOBAL)pArgsArr );
 }

@@ -142,6 +142,7 @@ DLG_OnInitDialog(EnvVarsDlg)
 
 	SubclassSysVarsListBox( GetDlgItem( This->hDlg, IDC_LIST_SYS ), true );
 	SubclassUsrVarsListBox( GetDlgItem( This->hDlg, IDC_LIST_USER ), true );
+
 }
 
 DLG_OnDestroy(EnvVarsDlg)
