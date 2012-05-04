@@ -13,11 +13,11 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	__app.nCmdShow = nCmdShow;
 	App_Init();
 
-	EnvVarsDlg * pMainDlg = CLS_Member( EnvVarsDlg, New )();
+	EnvVarsDlg * pMainDlg = EnvVarsDlg_New();
 	__app.phMainWnd = &pMainDlg->hDlg;
-	int nResult = CLS_Member( EnvVarsDlg, DoModal )( pMainDlg, HWND_DESKTOP );
+	int nResult = EnvVarsDlg_DoModal( pMainDlg, HWND_DESKTOP );
 
-	CLS_Member( EnvVarsDlg, Delete )(pMainDlg);
+	EnvVarsDlg_Delete(pMainDlg);
 	return 0;
 }
 
@@ -25,35 +25,9 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 App __app;
 void App_Init( void )
 {
+	InitCommonControls();
 	GetCommandArguments( &__app.CmdArguments );
 	// get path of executable
-	TCHAR szBuff[_MAX_PATH];
-	GetModuleFileName( __app.hInstance, szBuff, _MAX_PATH );
-	TCHAR * psz = _tcsrchr( szBuff, '\\' );
-	TCHAR * pszFile;
-	if ( psz != NULL )
-	{
-		*psz = 0;
-		__app.strExePath = szBuff;
-		__app.strExeFile = psz + 1;
-		pszFile = psz + 1;
-	}
-	else
-	{
-		__app.strExePath = TEXT("");
-		__app.strExeFile = szBuff;
-		pszFile = szBuff;
-	}
-	psz = _tcsrchr( pszFile, '.' );
-	if ( psz != NULL )
-	{
-		*psz = 0;
-		__app.strExeTitle = pszFile;
-		__app.strExeExt = psz + 1;
-	} 
-	else
-	{
-		__app.strExeTitle = pszFile;
-		__app.strExeExt = TEXT("");
-	}
+	__app.strExePath = ModulePath( __app.hInstance, &__app.strExeFile );
+	__app.strExeTitle = FileTitle( __app.strExeFile, &__app.strExeExt );
 }

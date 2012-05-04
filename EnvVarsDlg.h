@@ -27,16 +27,19 @@ struct EnvVarsDlg
 	String strSysEnvKey;
 	DWORD dwRegTypeUserVar;
 	DWORD dwRegTypeSysVar;
-	bool bHasModified;
+	bool bUserVarHasModified;
+	bool bSysVarHasModified;
+	UINT uDragListMsg;
+	int iDragSource;
 };
 
 extern DLG_DeclMap(EnvVarsDlg);
 
-CLS_New(EnvVarsDlg);
-CLS_Delete(EnvVarsDlg);
+EnvVarsDlg * EnvVarsDlg_New( void );
+void EnvVarsDlg_Delete( EnvVarsDlg * This );
 
-DLG_OnInitDialog(EnvVarsDlg);
-DLG_Proc(EnvVarsDlg);
-DLG_DoModal(EnvVarsDlg);
+void EnvVarsDlg_OnInitDialog( EnvVarsDlg * This );
+INT_PTR CALLBACK EnvVarsDlg_Proc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam );
+int EnvVarsDlg_DoModal( EnvVarsDlg * This, HWND hParentWnd );
 
 #endif // !defined(AFX_ENVVARSDLG_H__9B4FCC14_53DE_4FD1_9035_BE0F914E6CAC__INCLUDED_)

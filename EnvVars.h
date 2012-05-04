@@ -12,6 +12,8 @@
 #pragma warning( disable : 4786 )
 
 #include <windows.h>
+#include <CommCtrl.h>
+#pragma comment( lib, "comctl32.lib" )
 #include <map>
 #include "utils.h"
 
