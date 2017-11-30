@@ -1,21 +1,21 @@
-/*´ËÄ£¿é·â×°ÁËÒ»Ğ©×¢²á±í²Ù×÷µÄAPIº¯Êı.*/
+ï»¿/*æ­¤æ¨¡å—å°è£…äº†ä¸€äº›æ³¨å†Œè¡¨æ“ä½œçš„APIå‡½æ•°.*/
 #include <Windows.h>
 #include <string>
 #include <vector>
 #include <tchar.h>
 #include "utils.h"
 #include "RegOperate3.h"
-//--------¶¨ÒåÈ«¾ÖÊı¾İ-----------
+//--------å®šä¹‰å…¨å±€æ•°æ®-----------
 DWORD g_reg_type = REG_DWORD, g_size = sizeof(DWORD), g_reg_error = ERROR_NON;
 String g_result;
 //-----------------------------------
 /*******************************************************************/
-/*reg_open_key»ñÈ¡¼ü¾ä±ú*/
+/*reg_open_keyè·å–é”®å¥æŸ„*/
 REGOPERATE_IMPL_FUNC(HKEY) reg_open_key( LPCTSTR key_name, BOOL w /*= FALSE*/ )
 {
 	HKEY base_key_handle = NULL, key_handle = NULL;
 	LPCTSTR str = _tcschr( key_name, TEXT('\\') );
-	if ( !str ) str = key_name + _tcslen(key_name);	//Ö»ÊÇ¸ù¼üµÄÇé¿ö.
+	if ( !str ) str = key_name + _tcslen(key_name);	//åªæ˜¯æ ¹é”®çš„æƒ…å†µ.
 	if ( !_tcsnicmp( key_name, TEXT("HKEY_CLASSES_ROOT"), str - key_name ) || !_tcsnicmp( key_name, TEXT("HKCR"), str - key_name ) )
 		base_key_handle = HKEY_CLASSES_ROOT;
 	else if ( !_tcsnicmp( key_name, TEXT("HKEY_CURRENT_CONFIG"), str - key_name ) || !_tcsnicmp( key_name, TEXT("HKCC"), str - key_name ) )
@@ -35,10 +35,10 @@ REGOPERATE_IMPL_FUNC(HKEY) reg_open_key( LPCTSTR key_name, BOOL w /*= FALSE*/ )
 	{
 		return base_key_handle;
 	}
-	str++;	//Ìø¹ı'\\'
+	str++;	//è·³è¿‡'\\'
 	if ( base_key_handle )
 	{
-		if ( w )  //ÒÔĞ´·½Ê½,ÈôÒÔ´æÔÚ,Ôò´ò¿ª,²»´æÔÚÔò´´½¨.
+		if ( w )  //ä»¥å†™æ–¹å¼,è‹¥ä»¥å­˜åœ¨,åˆ™æ‰“å¼€,ä¸å­˜åœ¨åˆ™åˆ›å»º.
 			RegCreateKey( base_key_handle, str, &key_handle );
 		else
 			RegOpenKey( base_key_handle, str, &key_handle );
@@ -61,7 +61,7 @@ REGOPERATE_IMPL_FUNC(int) reg_close_key( HKEY key_handle )
 	}
 }
 /*******************************************************************/
-/*»ñÈ¡»º³åÇø´óĞ¡*/
+/*è·å–ç¼“å†²åŒºå¤§å°*/
 /*DWORD GetBufferLength(DWORD RegType,const LPBYTE buffer) {
 	switch(RegType) {
 	case REG_SZ:
@@ -115,9 +115,9 @@ REGOPERATE_IMPL_FUNC(int) reg_write_long( HKEY key_handle, LPCTSTR value_name, D
 REGOPERATE_IMPL_FUNC(int) reg_read_ex( HKEY key_handle, LPCTSTR value_name, LPBYTE buffer, LPDWORD reg_type_, LPDWORD buf_size_ )
 {
 	int err = ERROR_NON;
-	if( buffer )		// »º³åÇø²»¿Õ
+	if( buffer )		// ç¼“å†²åŒºä¸ç©º
 	{
-		if( key_handle )	//¾ä±ú²»¿Õ
+		if( key_handle )	//å¥æŸ„ä¸ç©º
 		{
 			if( RegQueryValueEx( key_handle, value_name, NULL, reg_type_, buffer, buf_size_ ) ) err |= ERROR_VALUENAME;
 			g_reg_type = *reg_type_;
@@ -144,7 +144,7 @@ REGOPERATE_IMPL_FUNC(int) reg_read_long( HKEY key_handle, LPCTSTR value_name, LP
 REGOPERATE_IMPL_FUNC(int) reg_delete( LPCTSTR key_name, LPCTSTR value_name /*= NULL */ )
 {
 	int err = ERROR_NON;
-	if ( value_name && *value_name ) //ÈôÖµÃû²»Îª¿Õ,Ôò½øĞĞÉ¾³ıÖµµÄ²Ù×÷
+	if ( value_name && *value_name ) //è‹¥å€¼åä¸ä¸ºç©º,åˆ™è¿›è¡Œåˆ é™¤å€¼çš„æ“ä½œ
 	{
 		HKEY key_handle = reg_open_key(key_name);
 		if ( key_handle )
@@ -154,17 +154,17 @@ REGOPERATE_IMPL_FUNC(int) reg_delete( LPCTSTR key_name, LPCTSTR value_name /*= N
 		}
 		else err |= ERROR_KEYNAME;
 	}
-	else //ÖµÃûÎª¿Õ,ÔòÉ¾³ı¼ü
+	else //å€¼åä¸ºç©º,åˆ™åˆ é™¤é”®
 	{
-		TCHAR * p = _tcsrchr( key_name, '\\' );
-		if ( p && *( p + 1 ) )	//²»ÊÇ¸ù¼ü
+		TCHAR * p = (TCHAR *)_tcsrchr( key_name, '\\' );
+		if ( p && *( p + 1 ) )	//ä¸æ˜¯æ ¹é”®
 		{
 			TCHAR parent_key[512] = {0};
 			TCHAR const * sub_key;
 			_tcsncpy( parent_key, key_name, p - key_name );
 			p++; // skip '\\'
 			sub_key = p;
-			/*-----------ÒÔÏÂÊÇÉ¾³ı¼ü----------*/
+			/*-----------ä»¥ä¸‹æ˜¯åˆ é™¤é”®----------*/
 			HKEY key_handle = reg_open_key(parent_key);
 			if ( key_handle )
 			{
@@ -173,7 +173,7 @@ REGOPERATE_IMPL_FUNC(int) reg_delete( LPCTSTR key_name, LPCTSTR value_name /*= N
 			}
 			else err |= ERROR_KEYNAME;
 		}
-		else err |= ERROR_KEYNAME;	// ÊÇ¸ù¼üµÄÇé¿öÏÂ,²»ÄÜÉ¾³ı
+		else err |= ERROR_KEYNAME;	// æ˜¯æ ¹é”®çš„æƒ…å†µä¸‹,ä¸èƒ½åˆ é™¤
 	}
 	return err;
 }
@@ -201,14 +201,14 @@ REGOPERATE_IMPL_FUNC(BOOL) reg_error_info( int error_code, LPTSTR info_buff, int
 	memset( info_buff, 0, size );
 	if ( error_code == ERROR_NON )
 	{
-		_tcscat( info_buff, TEXT("Ã»ÓĞ´íÎó!\n") );
+		_tcscat( info_buff, TEXT("æ²¡æœ‰é”™è¯¯!\n") );
 		return TRUE;
 	}
-	if ( error_code & ERROR_KEYNAME ) _tcscat( info_buff, TEXT("¼üÃû´íÎó!\n") );
-	if ( error_code & ERROR_VALUENAME ) _tcscat( info_buff, TEXT("ÖµÃû´íÎó!\n") );
-	if ( error_code & ERROR_REGTYPE ) _tcscat( info_buff, TEXT("ÀàĞÍ´íÎó!\n") );
-	if ( error_code & ERROR_BUFFER ) _tcscat( info_buff, TEXT("»º³åÇø´íÎó!\n") );
-	if ( error_code & ERROR_OTHER ) _tcscat( info_buff, TEXT("ÆäËû´íÎó!\n") );
+	if ( error_code & ERROR_KEYNAME ) _tcscat( info_buff, TEXT("é”®åé”™è¯¯!\n") );
+	if ( error_code & ERROR_VALUENAME ) _tcscat( info_buff, TEXT("å€¼åé”™è¯¯!\n") );
+	if ( error_code & ERROR_REGTYPE ) _tcscat( info_buff, TEXT("ç±»å‹é”™è¯¯!\n") );
+	if ( error_code & ERROR_BUFFER ) _tcscat( info_buff, TEXT("ç¼“å†²åŒºé”™è¯¯!\n") );
+	if ( error_code & ERROR_OTHER ) _tcscat( info_buff, TEXT("å…¶ä»–é”™è¯¯!\n") );
 	return TRUE;
 }
 

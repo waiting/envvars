@@ -1,4 +1,4 @@
-// SubclassListBox.h: interface for the SubclassListBox class.
+﻿// SubclassListBox.h: interface for the SubclassListBox class.
 //
 //////////////////////////////////////////////////////////////////////
 

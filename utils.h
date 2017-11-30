@@ -1,4 +1,4 @@
-// utils.h: interface for the utils class.
+ï»¿// utils.h: interface for the utils class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -19,7 +19,7 @@
 #include "MemImage.h"
 #include "MemDC.h"
 
-// ÀàĞÍÖ§³Ö ---------------------------------------------------------------
+// ç±»å‹æ”¯æŒ ---------------------------------------------------------------
 typedef std::basic_string<CHAR> AnsiString;
 typedef AnsiString LocalString;
 typedef std::basic_string<WCHAR> UnicodeString;
@@ -30,27 +30,27 @@ typedef std::vector<LocalString> LocalStringArray;
 typedef std::vector<UnicodeString> UnicodeStringArray;
 typedef std::vector<String> StringArray;
 
-// »·¾³Ïà¹Ø ---------------------------------------------------------------
+// ç¯å¢ƒç›¸å…³ ---------------------------------------------------------------
 bool IsExpandString( LPCTSTR lpsz );
 String ExplainEnvVars( LPCTSTR lpsz );
 
-// ×Ö´®Ïà¹Ø ---------------------------------------------------------------
-/* ·µ»ØÒ»¸ö×Ö·û´®ÀïÓĞ¶àÉÙ¸ö×Ö·û(by local CodePage),ÓÃÓÚmbstowcs */
+// å­—ä¸²ç›¸å…³ ---------------------------------------------------------------
+/* è¿”å›ä¸€ä¸ªå­—ç¬¦ä¸²é‡Œæœ‰å¤šå°‘ä¸ªå­—ç¬¦(by local CodePage),ç”¨äºmbstowcs */
 UINT LocalCharsCount( LPCSTR lpszLocal );
-/* ·µ»ØÒ»¸öunicode×Ö·û´®×îÉÙ³¤¶È(by local CodePage),ÓÃÓÚwcstombs */
+/* è¿”å›ä¸€ä¸ªunicodeå­—ç¬¦ä¸²æœ€å°‘é•¿åº¦(by local CodePage),ç”¨äºwcstombs */
 UINT UnicodeMinLength( LPCWSTR lpszUnicode );
-/* Unicode×ª»»µ½±¾µØAnsi */
+/* Unicodeè½¬æ¢åˆ°æœ¬åœ°Ansi */
 LocalString UnicodeToLocal( UnicodeString const & strUnicode );
-/* ±¾µØANSI×ªµ½Unicode */
+/* æœ¬åœ°ANSIè½¬åˆ°Unicode */
 UnicodeString LocalToUnicode( LocalString const & strLocal );
 
-/* ¼æÈİ×Ö·û´®ÓëUnicode,Local×Ö·û´®Ïà»¥×ª»» */
+/* å…¼å®¹å­—ç¬¦ä¸²ä¸Unicode,Localå­—ç¬¦ä¸²ç›¸äº’è½¬æ¢ */
 String LocalToString( LocalString const & strLocal );
 String UnicodeToString( UnicodeString const & strUnicode );
 LocalString StringToLocal( String const & str );
 UnicodeString StringToUnicode( String const & str );
 
-/* UTF8Óë¼æÈİ´®Ö®¼äµÄ×ª»» */
+/* UTF8ä¸å…¼å®¹ä¸²ä¹‹é—´çš„è½¬æ¢ */
 String UTF8ToString( AnsiString const & strUTF8 );
 AnsiString StringToUTF8( String const & str );
 
@@ -61,35 +61,35 @@ String FormatExV( int cchMsg, LPCTSTR lpszFormat, va_list args );
 String FormatEx( int cchMsg, LPCTSTR lpszFormat, ... );
 String Format( LPCTSTR lpszFormat, ... );
 
-// ×ÊÔ´Ïà¹Ø ---------------------------------------------------------------
-/* ÔØÈë×Ö·û´®×ÊÔ´ */
+// èµ„æºç›¸å…³ ---------------------------------------------------------------
+/* è½½å…¥å­—ç¬¦ä¸²èµ„æº */
 UnicodeString LoadStringResExW( HMODULE hModule, UINT uStringResID );
 String LoadStringResEx( HMODULE hModule, UINT uStringResID );
 String LoadStringRes( UINT uStringResID );
 
-// ÏµÍ³Ïà¹Ø ---------------------------------------------------------------
-/* ·µ»ØÄ£¿éÂ·¾¶£¬Êä³öÄ£¿éÎÄ¼şÃû */
+// ç³»ç»Ÿç›¸å…³ ---------------------------------------------------------------
+/* è¿”å›æ¨¡å—è·¯å¾„ï¼Œè¾“å‡ºæ¨¡å—æ–‡ä»¶å */
 String ModulePath( HMODULE hModule = NULL, String * pStrFileName = NULL );
-/* »ñÈ¡Â·¾¶Ãû */
+/* è·å–è·¯å¾„å */
 String FilePath( String const & strFull, String * pStrFileName = NULL );
-/* »ñÈ¡Ò»¸öÎÄ¼şÃûµÄ±êÌâºÍÀ©Õ¹Ãû */
+/* è·å–ä¸€ä¸ªæ–‡ä»¶åçš„æ ‡é¢˜å’Œæ‰©å±•å */
 String FileTitle( String const & strFileName, String * pStrExtName = NULL );
-/* ÅĞ¶ÏÊÇ·ñÊÇÒ»¸öÄ¿Â¼ */
+/* åˆ¤æ–­æ˜¯å¦æ˜¯ä¸€ä¸ªç›®å½• */
 BOOL IsDirectory( LPCTSTR lpszPath );
 
-/* »ñµÃ³ÌĞòµÄÃüÁîĞĞ²ÎÊı */
+/* è·å¾—ç¨‹åºçš„å‘½ä»¤è¡Œå‚æ•° */
 int GetCommandArguments( StringArray * pArr );
-/* Ê¹ÄÜ¹Ø»ú */
+/* ä½¿èƒ½å…³æœº */
 bool ShutdownPrivilege( bool bEnable );
 
-// Ê±¼äÏà¹Ø ---------------------------------------------------------------
+// æ—¶é—´ç›¸å…³ ---------------------------------------------------------------
 ULONGLONG GetUTCTimeMS( void );
 UINT GetUTCTime( void );
 void GetUTCSysTimeByUTCMS( ULONGLONG ullMilliseconds, LPSYSTEMTIME lpSysTime );
 void GetLocalSysTimeByUTCMS( ULONGLONG ullMilliseconds, LPSYSTEMTIME lpSysTime );
 
-// UIÏà¹Ø -----------------------------------------------------------------
-/* ´°¿Ú¶¨Ê±Æ÷ */
+// UIç›¸å…³ -----------------------------------------------------------------
+/* çª—å£å®šæ—¶å™¨ */
 class WindowTimer
 {
 public:
@@ -106,25 +106,25 @@ private:
 	WindowTimer( WindowTimer const & );
 	WindowTimer & operator = ( WindowTimer const & );
 };
-// ´°¿ÚÏà¹Ø ---------------------------------------------------------------
-/* µ¯³öÒ»¸öÏûÏ¢¿ò */
+// çª—å£ç›¸å…³ ---------------------------------------------------------------
+/* å¼¹å‡ºä¸€ä¸ªæ¶ˆæ¯æ¡† */
 void MsgBox( String const & strMsg );
 
-/* »ñÈ¡¿Í»§Çø¾ØĞÎ */
+/* è·å–å®¢æˆ·åŒºçŸ©å½¢ */
 RECT Window_GetClient( HWND hWnd );
-/* »ñÈ¡´°¿Ú¾ØĞÎ,Ïà¶ÔÓÚ¸¸´°¿Ú */
+/* è·å–çª—å£çŸ©å½¢,ç›¸å¯¹äºçˆ¶çª—å£ */
 RECT Window_GetRect( HWND hWnd );
-/* ÉèÖÃ´°¿Ú¾ØĞÎ,Ïà¶ÔÓÚ¸¸´°¿Ú */
+/* è®¾ç½®çª—å£çŸ©å½¢,ç›¸å¯¹äºçˆ¶çª—å£ */
 void Window_SetRect( HWND hWnd, LPCRECT lpRect );
-/* ÅòÕÍ´°¿Ú */
+/* è†¨èƒ€çª—å£ */
 void Window_Inflate( HWND hWnd, int dx, int dy );
-/* ÒÔÏà¶Ô´°¿ÚÎª×¼¾ÓÖĞ´°¿Ú */
+/* ä»¥ç›¸å¯¹çª—å£ä¸ºå‡†å±…ä¸­çª—å£ */
 void Window_Center( HWND hWnd, HWND hRelativeWnd, bool bInRelativeWnd = false );
-/* ´°¿ÚÎÄ±¾ */
+/* çª—å£æ–‡æœ¬ */
 String Window_GetText( HWND hWnd );
 void Window_SetText( HWND hWnd, String const & str );
 
-// ListView²Ù×÷
+// ListViewæ“ä½œ
 void ListView_AddStrings( HWND hListView, int nArgCount, ... );
 void ListView_InsertStrings( HWND hListView, int iItemIndex, int nArgCount, ... );
 void ListView_SetStrings( HWND hListView, int iItemIndex, int nArgCount, ... );

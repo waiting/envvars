@@ -1,5 +1,5 @@
-// EnvVars.h:
-// ∞¸∫¨“ª–©œµÕ≥Õ∑Œƒº˛
+Ôªø// EnvVars.h:
+// ÂåÖÂê´‰∏Ä‰∫õÁ≥ªÁªüÂ§¥Êñá‰ª∂
 //////////////////////////////////////////////////////////////////////
 
 #if !defined(AFX_ENVVARS_H__3B7360BD_FC81_4867_8FF7_57CA936E3BCA__INCLUDED_)
@@ -17,7 +17,7 @@
 #include <map>
 #include "utils.h"
 
-/* ”¶”√≥Ã–Ú ˝æ› */
+/* Â∫îÁî®Á®ãÂ∫èÊï∞ÊçÆ */
 struct App
 {
 	StringArray CmdArguments;
@@ -32,13 +32,13 @@ struct App
 extern App __app;
 
 void App_Init( void );
-/* ≥ı ºªØ√¸¡Ó≤Œ ˝ */
+/* ÂàùÂßãÂåñÂëΩ‰ª§ÂèÇÊï∞ */
 void App_InitCmdArguments( void );
 
 
-/* ∏¥”√∫Í */
+/* Â§çÁî®ÂÆè */
 #define MemberName(CLS,M) CLS##_##M
-// ªÒµ√÷∏∂®¿‡–Õ÷∏’Î
+// Ëé∑ÂæóÊåáÂÆöÁ±ªÂûãÊåáÈíà
 #define GetPtr( T, V ) ((T *)(V))
 // Method Name
 #define CLS_Member(CLS,NAME) MemberName(CLS,NAME)
@@ -65,7 +65,7 @@ void App_InitCmdArguments( void );
 #define DLG_This(DLG) ( DLG_WndMap(DLG)[hDlg] )
 // assoc wnd handle
 #define DLG_BindHWND(DLG) do { GetPtr( DLG, lParam )->hDlg = hDlg; DLG_WndMap(DLG)[hDlg] = GetPtr( DLG, lParam ); } while (0)
-// DoModal∑Ω∑®
+// DoModalÊñπÊ≥ï
 #define DLG_DoModal(DLG) CLS_Method(int,DLG,DoModal)( DLG * This, HWND hParentWnd )
 #define DLG_DoModal_Impl(DLG,TEMPL_ID) DLG_DoModal(DLG)\
 { return DialogBoxParam( __app.hInstance, MAKEINTRESOURCE(TEMPL_ID), hParentWnd, CLS_Member( DLG, Proc ), (LPARAM)This ); }
@@ -74,7 +74,7 @@ void App_InitCmdArguments( void );
 // OnDestroy
 #define DLG_OnDestroy(DLG) CLS_Method(void,DLG,OnDestroy)( DLG * This )
 
-// ∂‘ª∞øÚπ˝≥Ã
+// ÂØπËØùÊ°ÜËøáÁ®ã
 #define DLG_Proc(DLG) CLS_Method(INT_PTR CALLBACK,DLG,Proc)( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
 
 // switch msg

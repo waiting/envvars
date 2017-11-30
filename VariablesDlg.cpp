@@ -1,4 +1,4 @@
-// VariablesDlg.cpp:
+ï»¿// VariablesDlg.cpp:
 //
 //////////////////////////////////////////////////////////////////////
 #include "EnvVars.h"
@@ -18,13 +18,13 @@ DLG_DoModal_Impl( VariablesDlg, IDD_VARIABLES )
 DLG_OnInitDialog(VariablesDlg)
 {
 	Window_Center( This->hDlg, GetParent(This->hDlg) );
-	// Í¼±ê
+	// å›¾æ ‡
 	EnvVarsDlg * pDlg = DLG_WndMap(EnvVarsDlg)[*__app.phMainWnd];
 	SendMessage( This->hDlg, WM_SETICON, ICON_SMALL, (LPARAM)pDlg->hIcon );
-	// ±êÌâ
+	// æ ‡é¢˜
 	String strTitle= This->bIsUser ? LoadStringRes(IDS_LANG_USERENVVARS) : LoadStringRes(IDS_LANG_SYSENVVARS);
 	Window_SetText( This->hDlg, strTitle );
-	// ³õÊ¼»¯list view
+	// åˆå§‹åŒ–list view
 	String strName, strValue;
 	strName = LoadStringRes(IDS_LANG_NAME);
 	strValue = LoadStringRes(IDS_LANG_VALUE);
@@ -45,7 +45,7 @@ DLG_OnInitDialog(VariablesDlg)
 	column.cx = nListCtrlWidth - nFirstColWidth;
 	SendMessage( hListCtrl, LVM_INSERTCOLUMN, 1, (LPARAM)&column );
 
-	// Ã¶¾Ù»·¾³±äÁ¿
+	// æžšä¸¾çŽ¯å¢ƒå˜é‡
 	UINT uKeyResId = This->bIsUser ? IDS_USERENVKEY: IDS_SYSENVKEY;
 	REG_VALUE_ARRAY arr;
 	String strEnvKey;

@@ -1,4 +1,4 @@
-// ModifyDlg.cpp:
+ï»¿// ModifyDlg.cpp:
 //
 //////////////////////////////////////////////////////////////////////
 #include "EnvVars.h"
@@ -86,7 +86,7 @@ DLG_Proc(ModifyDlg)
 			SetTextColor( hDC, 0xFF0000 );
 			SetBkMode( hDC, TRANSPARENT );
 			return (INT_PTR)GetStockObject(NULL_BRUSH);
-			//return SendMessage( (HWND)lParam, Äã×Ô¼º¶¨ÒåÒ»¸öÏûÏ¢, wParam, lParam );
+			//return SendMessage( (HWND)lParam, ä½ è‡ªå·±å®šä¹‰ä¸€ä¸ªæ¶ˆæ¯, wParam, lParam );
 	END_MSG()
 	return 0;
 }

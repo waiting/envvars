@@ -1,5 +1,5 @@
-// EnvVars.cpp:
-// WinMain()ºÍApplicationÊµÏÖ
+ï»¿// EnvVars.cpp:
+// WinMain()å’ŒApplicationå®žçŽ°
 //////////////////////////////////////////////////////////////////////
 
 #include "EnvVars.h"

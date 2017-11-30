@@ -1,4 +1,4 @@
-// EnvVarsDlg.cpp:
+ï»¿// EnvVarsDlg.cpp:
 //
 //////////////////////////////////////////////////////////////////////
 #include "EnvVars.h"
@@ -14,7 +14,7 @@ CLS_New_Impl(EnvVarsDlg)
 CLS_Delete_Impl(EnvVarsDlg)
 DLG_DoModal_Impl( EnvVarsDlg, IDD_ENVVARS_DIALOG )
 
-// ÔØÈë»·¾³±äÁ¿
+// è½½å…¥çŽ¯å¢ƒå˜é‡
 void EnvVarsDlg_LoadEnvVars( EnvVarsDlg * This )
 {
 	UINT const BUF_SIZE = 32767;
@@ -30,7 +30,7 @@ void EnvVarsDlg_LoadEnvVars( EnvVarsDlg * This )
 	}
 	strTitle = Window_GetText(This->hDlg);
 	Window_SetText( This->hDlg, ( This->strVarName + strTitle ) );
-	// ¼ÓÔØ±äÁ¿
+	// åŠ è½½å˜é‡
 	HKEY hSysEnvKey = reg_open_key( This->strSysEnvKey.c_str(), FALSE );
 	dwSize = BUF_SIZE;
 	ZeroMemory( sz, dwSize );
@@ -48,7 +48,7 @@ void EnvVarsDlg_LoadEnvVars( EnvVarsDlg * This )
 	reg_close_key(hUserEnvKey);
 }
 
-// Ìá½»±äÁ¿
+// æäº¤å˜é‡
 void EnvVarsDlg_CommitEnvVars( EnvVarsDlg * This, String const & strEnvKey, String const & strVarName, String const & strValue, DWORD dwRegType )
 {
 	if ( strValue.empty() )
@@ -64,7 +64,7 @@ void EnvVarsDlg_CommitEnvVars( EnvVarsDlg * This, String const & strEnvKey, Stri
 	}
 }
 
-// ¸üÐÂ±äÁ¿ÁÐ±í
+// æ›´æ–°å˜é‡åˆ—è¡¨
 void EnvVarsDlg_UpdateVarsList( EnvVarsDlg * This, UINT uListBoxID, StringArray & arrVars )
 {
 	HWND hListBox = GetDlgItem( This->hDlg, uListBoxID );
@@ -76,7 +76,7 @@ void EnvVarsDlg_UpdateVarsList( EnvVarsDlg * This, UINT uListBoxID, StringArray 
 	}
 }
 
-// Ìí¼ÓÖµ
+// æ·»åŠ å€¼
 void EnvVarsDlg_OnAddVal( EnvVarsDlg * This, UINT uListBoxID, bool bIsUser, StringArray & arrVars, String const & strEnvKey, String const & strVarName )
 {
 	ModifyDlg * pModDlg = ModifyDlg_New();
@@ -98,7 +98,7 @@ void EnvVarsDlg_OnAddVal( EnvVarsDlg * This, UINT uListBoxID, bool bIsUser, Stri
 	ModifyDlg_Delete(pModDlg);
 }
 
-// ÐÞ¸ÄÖµ
+// ä¿®æ”¹å€¼
 void EnvVarsDlg_OnModVal( EnvVarsDlg * This, UINT uListBoxID, bool bIsUser, StringArray & arrVars, String const & strEnvKey, String const & strVarName )
 {
 	HWND hListBox = GetDlgItem( This->hDlg, uListBoxID );
@@ -121,24 +121,24 @@ void EnvVarsDlg_OnModVal( EnvVarsDlg * This, UINT uListBoxID, bool bIsUser, Stri
 	ModifyDlg_Delete(pModDlg);
 }
 
-// ¶Ô»°¿ò³õÊ¼»¯ÏûÏ¢
+// å¯¹è¯æ¡†åˆå§‹åŒ–æ¶ˆæ¯
 void EnvVarsDlg_OnInitDialog( EnvVarsDlg * This )
 {
 	This->bUserVarHasModified = false;
 	This->bSysVarHasModified = false;
 	This->iDragSource = -1;
-	// Í¼±êÉèÖÃ
+	// å›¾æ ‡è®¾ç½®
 	This->hIcon = LoadIcon( __app.hInstance, MAKEINTRESOURCE(IDR_MAINFRAME) );
 	SendMessage( This->hDlg, WM_SETICON, ICON_BIG, (LPARAM)This->hIcon );
 	SendMessage( This->hDlg, WM_SETICON, ICON_SMALL, (LPARAM)This->hIcon );
 
-	// Î»ÖÃ¾ÓÖÐ
+	// ä½ç½®å±…ä¸­
 	Window_Center( This->hDlg, HWND_DESKTOP );
 
-	// ÔØÈë»·¾³±äÁ¿
+	// è½½å…¥çŽ¯å¢ƒå˜é‡
 	EnvVarsDlg_LoadEnvVars(This);
 
-	// ¸üÐÂ±äÁ¿ÁÐ±í
+	// æ›´æ–°å˜é‡åˆ—è¡¨
 	EnvVarsDlg_UpdateVarsList( This, IDC_LIST_USER, This->userVars );
 	EnvVarsDlg_UpdateVarsList( This, IDC_LIST_SYS, This->sysVars );
 
@@ -158,7 +158,7 @@ void EnvVarsDlg_OnDestroy( EnvVarsDlg * This )
 
 void EnvVarsDlg_OnOK( EnvVarsDlg * This )
 {
-	// Ìá½»¸üÐÂ»·¾³±äÁ¿
+	// æäº¤æ›´æ–°çŽ¯å¢ƒå˜é‡
 	if ( This->bUserVarHasModified )
 	{
 		EnvVarsDlg_CommitEnvVars( This, This->strUserEnvKey, This->strVarName, StrJoin( TEXT(";"), This->userVars ), This->dwRegTypeUserVar );
@@ -169,7 +169,7 @@ void EnvVarsDlg_OnOK( EnvVarsDlg * This )
 		EnvVarsDlg_CommitEnvVars( This, This->strSysEnvKey, This->strVarName, StrJoin( TEXT(";"), This->sysVars ), This->dwRegTypeSysVar );
 	}
 
-	// ·¢ËÍÏûÏ¢¸øËùÓÐÓ¦ÓÃ³ÌÐòËµÃ÷»·¾³±äÁ¿ÒÑ¸Ä±ä
+	// å‘é€æ¶ˆæ¯ç»™æ‰€æœ‰åº”ç”¨ç¨‹åºè¯´æ˜ŽçŽ¯å¢ƒå˜é‡å·²æ”¹å˜
 	if ( This->bUserVarHasModified || This->bSysVarHasModified )
 	{
 		LRESULT lResult;
@@ -186,30 +186,30 @@ INT_PTR CALLBACK EnvVarsDlg_Proc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 	EnvVarsDlg * This = DLG_This(EnvVarsDlg);
 	if ( This != NULL && uMsg == This->uDragListMsg )
 	{
-		// ÍÏ·ÅÁÐ±í´¦Àí
+		// æ‹–æ”¾åˆ—è¡¨å¤„ç†
 		LPDRAGLISTINFO pDragListInfo = (LPDRAGLISTINFO)lParam;
 		switch ( pDragListInfo->uNotification )
 		{
 		case DL_BEGINDRAG:
 			{
-				// »ñÈ¡ÍÏ·ÅµÄÔ´ÁÐ±íÏî
+				// èŽ·å–æ‹–æ”¾çš„æºåˆ—è¡¨é¡¹
 				This->iDragSource = LBItemFromPt( pDragListInfo->hWnd, pDragListInfo->ptCursor, TRUE );
-				// ÔÚÒ»¸ö¶Ô»°¿ò¹ý³ÌÀï,±ØÐëÕâÑùÉèÖÃÏûÏ¢·µ»ØÖµ
+				// åœ¨ä¸€ä¸ªå¯¹è¯æ¡†è¿‡ç¨‹é‡Œ,å¿…é¡»è¿™æ ·è®¾ç½®æ¶ˆæ¯è¿”å›žå€¼
 				SetWindowLong( hDlg, DWL_MSGRESULT, TRUE );
 				return TRUE;
 			}
 			break;
 		case DL_DRAGGING:
-			// »­ÍÏ·ÅÄ¿±ê¹â±ê
+			// ç”»æ‹–æ”¾ç›®æ ‡å…‰æ ‡
 			DrawInsert( hDlg, pDragListInfo->hWnd, LBItemFromPt( pDragListInfo->hWnd, pDragListInfo->ptCursor, TRUE ) );
 			break;
 		case DL_CANCELDRAG:
-			// È¡ÏûÍÏ·Å,È¡Ïû¹â±êÏÔÊ¾
+			// å–æ¶ˆæ‹–æ”¾,å–æ¶ˆå…‰æ ‡æ˜¾ç¤º
 			DrawInsert( hDlg, pDragListInfo->hWnd, -1 );
 			break;
 		case DL_DROPPED:
 			{
-				// ·ÅÖÃµÄÄ¿±êÁÐ±íÏî
+				// æ”¾ç½®çš„ç›®æ ‡åˆ—è¡¨é¡¹
 				int iDropTarget = LBItemFromPt( pDragListInfo->hWnd, pDragListInfo->ptCursor, TRUE );
 				if ( iDropTarget != -1 && This->iDragSource != -1 && iDropTarget != This->iDragSource )
 				{
@@ -217,7 +217,7 @@ INT_PTR CALLBACK EnvVarsDlg_Proc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 					{
 					case IDC_LIST_USER:
 						{
-							// ÍÏ·ÅÎ»ÖÃÊý¾Ý¸üÐÂ
+							// æ‹–æ”¾ä½ç½®æ•°æ®æ›´æ–°
 							String strVal = This->userVars[This->iDragSource];
 							This->userVars.erase( This->userVars.begin() + This->iDragSource );
 							This->userVars.insert( This->userVars.begin() + iDropTarget, strVal );

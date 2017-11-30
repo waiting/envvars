@@ -1,4 +1,4 @@
-// VariablesDlg.h: interface for the VariablesDlg class.
+﻿// VariablesDlg.h: interface for the VariablesDlg class.
 //
 //////////////////////////////////////////////////////////////////////
 

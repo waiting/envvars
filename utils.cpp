@@ -1,4 +1,4 @@
-// utils.cpp: implementation of the utils class.
+ï»¿// utils.cpp: implementation of the utils class.
 //
 //////////////////////////////////////////////////////////////////////
 #ifdef __GNUC__
@@ -15,7 +15,7 @@
 #pragma comment ( lib, "gdiplus" )
 #include "utils.h"
 
-// »·¾³Ïà¹Ø ---------------------------------------------------------------
+// ç¯å¢ƒç›¸å…³ ---------------------------------------------------------------
 bool IsExpandString( LPCTSTR lpsz )
 {
 	LPCTSTR p = lpsz;
@@ -78,7 +78,7 @@ String ExplainEnvVars( LPCTSTR lpsz )
 }
 
 
-// ×Ö´®Ïà¹Ø ---------------------------------------------------------------
+// å­—ä¸²ç›¸å…³ ---------------------------------------------------------------
 UINT LocalCharsCount( LPCSTR lpszLocal )
 {
 	UINT uCount = 0;
@@ -298,7 +298,7 @@ String Format( LPCTSTR lpszFormat, ... )
 	return FormatExV( 1024, lpszFormat, args );
 }
 
-// ×ÊÔ´Ïà¹Ø ---------------------------------------------------------------
+// èµ„æºç›¸å…³ ---------------------------------------------------------------
 UnicodeString LoadStringResExW( HMODULE hModule, UINT uStringResID )
 {
 	UnicodeString strRes;
@@ -344,7 +344,7 @@ String LoadStringRes( UINT uStringResID )
 	return LoadStringResEx( GetModuleHandle(NULL), uStringResID );
 }
 
-// ÏµÍ³Ïà¹Ø ---------------------------------------------------------------
+// ç³»ç»Ÿç›¸å…³ ---------------------------------------------------------------
 String ModulePath( HMODULE hModule /*= NULL*/, String * pStrFileName /*= NULL */ )
 {
 	String strBuffer;
@@ -396,7 +396,7 @@ String FileTitle( String const & strFileName, String * pStrExtName /*= NULL */ )
 	return strFileTitle;
 }
 
-/* ÅĞ¶ÏÊÇ·ñÊÇÒ»¸öÄ¿Â¼ */
+/* åˆ¤æ–­æ˜¯å¦æ˜¯ä¸€ä¸ªç›®å½• */
 BOOL IsDirectory( LPCTSTR lpszPath )
 {
 	DWORD dwAttr = GetFileAttributes(lpszPath);
@@ -411,7 +411,7 @@ BOOL IsDirectory( LPCTSTR lpszPath )
 int GetCommandArguments( StringArray * pArr )
 {
 	pArr->clear();
-	// ÃüÁîĞĞ²ÎÊı´¦Àí
+	// å‘½ä»¤è¡Œå‚æ•°å¤„ç†
 	LPWSTR lpszCmdLine = GetCommandLineW();
 	int nNumArgs, i;
 	LPWSTR * pArgsArr = CommandLineToArgvW( lpszCmdLine, &nNumArgs );
@@ -439,7 +439,7 @@ bool ShutdownPrivilege( bool bEnable )
 }
 
 
-// 1970-01-01 00:00:00µÄULARGE_INTEGERÃèÊö
+// 1970-01-01 00:00:00çš„ULARGE_INTEGERæè¿°
 static ULARGE_INTEGER __Time1970( void )
 {
 	SYSTEMTIME st1970 = {0};
@@ -498,7 +498,7 @@ void GetLocalSysTimeByUTCMS( ULONGLONG ullMilliseconds, LPSYSTEMTIME lpSysTime )
 	FileTimeToSystemTime( &localft, lpSysTime );
 }
 
-// UIÏà¹Ø -----------------------------------------------------------------
+// UIç›¸å…³ -----------------------------------------------------------------
 UINT_PTR WindowTimer::_uIDAutoIncrement = 0;
 WindowTimer::WindowTimer( void ) : _hWnd(NULL), _uID(0)
 {
@@ -534,12 +534,12 @@ UINT WindowTimer::GetID( void ) const
 	return _uID;
 }
 
-// ´°¿ÚÏà¹Ø ---------------------------------------------------------------
+// çª—å£ç›¸å…³ ---------------------------------------------------------------
 void MsgBox( String const & strMsg )
 {
 	MessageBox( GetForegroundWindow(), strMsg.c_str(), _T("Information Box"), 0 );
 }
-/* »ñÈ¡¿Í»§Çø¾ØĞÎ */
+/* è·å–å®¢æˆ·åŒºçŸ©å½¢ */
 RECT Window_GetClient( HWND hWnd )
 {
 	RECT rc;
@@ -629,7 +629,7 @@ void Window_SetText( HWND hWnd, String const & str )
 }
 
 
-// ListView²Ù×÷
+// ListViewæ“ä½œ
 void ListView_AddStrings( HWND hListView, int nArgCount, ... )
 {
 	int nItemsCount = ListView_GetItemCount(hListView);

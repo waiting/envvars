@@ -1,4 +1,4 @@
-/*��ģ���װ��һЩע���������API����.*/
+﻿/*此模块封装了一些注册表操作的API函数.*/
 #ifndef	__REG_OPERATE_2008_04_14__
 #define	__REG_OPERATE_2008_04_14__
 

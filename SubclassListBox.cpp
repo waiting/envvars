@@ -1,4 +1,4 @@
-// SubclassListBox.cpp: implementation of the SubclassListBox class.
+﻿// SubclassListBox.cpp: implementation of the SubclassListBox class.
 //
 //////////////////////////////////////////////////////////////////////
 #include "EnvVars.h"
